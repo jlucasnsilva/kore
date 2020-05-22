@@ -1,0 +1,5 @@
+- Criar o tipo k_Array
+- Criar o tipo k_Buffer, que é um array de char
+- Usar k_Buffer no load_shader
+- Criar o tipo k_String
+- Criar o tipo k_Error e k_ErrorPool
