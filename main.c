@@ -114,11 +114,10 @@ static void init(k_Executable* restrict self) {
     glGenBuffers(1, &g->vertexBuffer);
     // The following commands will talk about our 'vertexbuffer' buffer
     glBindBuffer(GL_ARRAY_BUFFER, g->vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
     glGenBuffers(1, &g->colorBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, g->colorBuffer);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
     glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STATIC_DRAW);
 }
 

@@ -112,7 +112,7 @@ static bool compileShader(GLuint shader, const char *code) {
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
     if (logLength > 0) {
         glGetShaderInfoLog(shader, logLength, NULL, log);
-        k_LogErrorf("[shader] %s\n", log);
+        k_LogErrorf("[shader] %s", log);
         return false;
     }
     return true;

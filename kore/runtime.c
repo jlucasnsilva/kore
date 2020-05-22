@@ -24,6 +24,8 @@ static void initCoreLibs(void);
 
 static void initVAO(void);
 
+static void initGL(void);
+
 // ========================================================
 //
 // Public implementation
@@ -32,8 +34,8 @@ static void initVAO(void);
 
 void k_Init(void) {
     initCoreLibs();
+    initGL();
     initVAO();
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     k_InitMemory(128);
     k_Logf("fully initialized\n");
 }
@@ -123,6 +125,14 @@ static void initCoreLibs(void) {
         exit(EXIT_FAILURE);
     }
     k_Logf("successfully initialized GLEW\n");
+}
+
+static void initGL(void) {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    // Enable depth test
+    glEnable(GL_DEPTH_TEST);
+    // Accept fragment if it closer to the camera than the former one
+    glDepthFunc(GL_LESS);
 }
 
 static void initVAO(void) {
