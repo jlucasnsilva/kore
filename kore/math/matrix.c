@@ -4,25 +4,25 @@
 
 #include <math.h>
 
-void Mat4SetVec4(Mat4 *restrict result, Vec4 a, Vec4 b, Vec4 c) {
+void k_Mat4SetVec4(k_Mat4 *restrict result, k_Vec4 a, k_Vec4 b, k_Vec4 c) {
     result->v[0] = a;
     result->v[1] = b;
     result->v[2] = c;
-    result->v[3] = bVec4(.x = 0.0f, .y = 0.0f, .z = 0.0f, .w = 1.0f);
+    result->v[3] = k_bVec4(.x = 0.0f, .y = 0.0f, .z = 0.0f, .w = 1.0f);
 }
 
-Vec4 Mat4Vec4(const Mat4 *restrict m, Vec4 v) {
+Vec4 k_Mat4Vec4(const k_Mat4 *restrict m, k_Vec4 v) {
     Vec4 result;
     for (int i = 0; i < 4; i++) {
-        result.v[i] = Vec4Dot(m->v[i], v);
+        result.v[i] = k_Vec4Dot(m->v[i], v);
     }
     return result;
 }
 
-void Mat4Rotation(Mat4 *restrict result, Vec3 rotation) {
-    float a = DegreeToRad(rotation.x);  // yaw
-    float b = DegreeToRad(rotation.y);  // pitch
-    float c = DegreeToRad(rotation.z);  // roll
+void k_Mat4Rotation(k_Mat4 *restrict result, k_Vec3 rotation) {
+    float a = k_DegreeToRad(rotation.x);  // yaw
+    float b = k_DegreeToRad(rotation.y);  // pitch
+    float c = k_DegreeToRad(rotation.z);  // roll
 
     result->m[0][0] = cosf(a) * cosf(b);
     result->m[0][1] = cosf(a) * sinf(b) * sinf(c) - sinf(a) * cosf(c);

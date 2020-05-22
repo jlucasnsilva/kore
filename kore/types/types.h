@@ -11,8 +11,8 @@
 
 typedef uint32_t Rune;
 
-DEFINE_MAYBE(char);
+K_DEFINE_MAYBE(char);
 
-DEFINE_MAYBE(GLuint);
+K_DEFINE_MAYBE(GLuint);
 
 #endif  // _K_TYPES_H_

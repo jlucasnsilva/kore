@@ -3,6 +3,6 @@
 
 const float PI = 3.14f;
 
-const float FloatTolerance = 0.01f;
+const float k_FloatTolerance = 0.01f;
 
 #endif  //_K_MATH_CONSTS_H_

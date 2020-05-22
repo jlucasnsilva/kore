@@ -14,6 +14,6 @@ typedef struct {
     char FragmentShaderPath[512];
 } k_ShaderProgramLoader;
 
-Maybe(GLuint) k_LoadShaderProgram(k_ShaderProgramLoader *restrict);
+k_Maybe(GLuint) k_LoadShaderProgram(k_ShaderProgramLoader *restrict);
 
 #endif  // _K_LOADER_H_

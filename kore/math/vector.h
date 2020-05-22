@@ -9,7 +9,7 @@ typedef union {
         float y;
     };
     float v[2];
-} Vec2;
+} k_Vec2;
 
 typedef union {
     struct {
@@ -18,7 +18,7 @@ typedef union {
         float z;
     };
     float v[3];
-} Vec3;
+} k_Vec3;
 
 typedef union {
     struct {
@@ -28,24 +28,24 @@ typedef union {
         float w;
     };
     float v[4];
-} Vec4;
+} k_Vec4;
 
-#define Vec2Spread(v) (v).x, (v).y
-#define bVec2(...) ((Vec2){{.x = 0.0f, .y = 0.0f, __VA_ARGS__}})
+#define k_Vec2Spread(v) (v).x, (v).y
+#define k_bVec2(...) ((k_Vec2){{.x = 0.0f, .y = 0.0f, __VA_ARGS__}})
 
-#define Vec3Spread(v) (v).x, (v).y, (v).z,
-#define bVec3(...) ((Vec3){{.x = 0.0f, .y = 0.0f, .z = 0.0f, __VA_ARGS__}})
+#define k_Vec3Spread(v) (v).x, (v).y, (v).z,
+#define k_bVec3(...) ((k_Vec3){{.x = 0.0f, .y = 0.0f, .z = 0.0f, __VA_ARGS__}})
 
-#define Vec4Spread(v) (v).x, (v).y, (v).z, (v).w
-#define bVec4(...) ((Vec4){{.x = 0.0f, \
-                            .y = 0.0f, \
-                            .z = 0.0f, \
-                            .w = 0.0f, \
-                            __VA_ARGS__}})
+#define k_Vec4Spread(v) (v).x, (v).y, (v).z, (v).w
+#define k_bVec4(...) ((k_Vec4){{.x = 0.0f, \
+                                .y = 0.0f, \
+                                .z = 0.0f, \
+                                .w = 0.0f, \
+                                __VA_ARGS__}})
 
-const Vec2 Vec2Zero = bVec2();
-const Vec3 Vec3Zero = bVec3();
-const Vec4 Vec4Zero = bVec4();
+const k_Vec2 k_Vec2Zero = k_bVec2();
+const k_Vec3 k_Vec3Zero = k_bVec3();
+const k_Vec4 k_Vec4Zero = k_bVec4();
 
 // ========================================================
 //
@@ -53,44 +53,44 @@ const Vec4 Vec4Zero = bVec4();
 //
 // ========================================================
 
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec2, Add, +)
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec2, Sub, -)
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec2, Times, *)
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec2, Div, /)
-DEFINE_VEC_PAIR_DISTANCE_SQUARED(Vec2)
-DEFINE_VEC_PAIR_DISTANCE(Vec2)
-DEFINE_VEC_PAIR_DOT(Vec2)
-DEFINE_VEC_PAIR_EQ(Vec2)
-DEFINE_VEC_LEN_SQUARED(Vec2)
-DEFINE_VEC_LEN(Vec2)
-DEFINE_VEC_SCALE(Vec2)
-DEFINE_VEC_NORMALIZE(Vec2)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec2, Add, +)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec2, Sub, -)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec2, Times, *)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec2, Div, /)
+K_DEFINE_VEC_PAIR_DISTANCE_SQUARED(k_Vec2)
+K_DEFINE_VEC_PAIR_DISTANCE(k_Vec2)
+K_DEFINE_VEC_PAIR_DOT(k_Vec2)
+K_DEFINE_VEC_PAIR_EQ(k_Vec2)
+K_DEFINE_VEC_LEN_SQUARED(k_Vec2)
+K_DEFINE_VEC_LEN(k_Vec2)
+K_DEFINE_VEC_SCALE(k_Vec2)
+K_DEFINE_VEC_NORMALIZE(k_Vec2)
 
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec3, Add, +)
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec3, Sub, -)
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec3, Times, *)
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec3, Div, /)
-DEFINE_VEC_PAIR_DISTANCE_SQUARED(Vec3)
-DEFINE_VEC_PAIR_DISTANCE(Vec3)
-DEFINE_VEC_PAIR_DOT(Vec3)
-DEFINE_VEC_PAIR_EQ(Vec3)
-DEFINE_VEC_LEN_SQUARED(Vec3)
-DEFINE_VEC_LEN(Vec3)
-DEFINE_VEC_SCALE(Vec3)
-DEFINE_VEC_NORMALIZE(Vec3)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec3, Add, +)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec3, Sub, -)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec3, Times, *)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec3, Div, /)
+K_DEFINE_VEC_PAIR_DISTANCE_SQUARED(k_Vec3)
+K_DEFINE_VEC_PAIR_DISTANCE(k_Vec3)
+K_DEFINE_VEC_PAIR_DOT(k_Vec3)
+K_DEFINE_VEC_PAIR_EQ(k_Vec3)
+K_DEFINE_VEC_LEN_SQUARED(k_Vec3)
+K_DEFINE_VEC_LEN(k_Vec3)
+K_DEFINE_VEC_SCALE(k_Vec3)
+K_DEFINE_VEC_NORMALIZE(k_Vec3)
 
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec4, Add, +)
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec4, Sub, -)
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec4, Times, *)
-DEFINE_VEC_PAIR_SIMPLE_OPERATION(Vec4, Div, /)
-DEFINE_VEC_PAIR_DISTANCE_SQUARED(Vec4)
-DEFINE_VEC_PAIR_DISTANCE(Vec4)
-DEFINE_VEC_PAIR_DOT(Vec4)
-DEFINE_VEC_PAIR_EQ(Vec4)
-DEFINE_VEC_LEN_SQUARED(Vec4)
-DEFINE_VEC_LEN(Vec4)
-DEFINE_VEC_SCALE(Vec4)
-DEFINE_VEC_NORMALIZE(Vec4)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec4, Add, +)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec4, Sub, -)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec4, Times, *)
+K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec4, Div, /)
+K_DEFINE_VEC_PAIR_DISTANCE_SQUARED(k_Vec4)
+K_DEFINE_VEC_PAIR_DISTANCE(k_Vec4)
+K_DEFINE_VEC_PAIR_DOT(k_Vec4)
+K_DEFINE_VEC_PAIR_EQ(k_Vec4)
+K_DEFINE_VEC_LEN_SQUARED(k_Vec4)
+K_DEFINE_VEC_LEN(k_Vec4)
+K_DEFINE_VEC_SCALE(k_Vec4)
+K_DEFINE_VEC_NORMALIZE(k_Vec4)
 
 // ========================================================
 //
@@ -98,18 +98,18 @@ DEFINE_VEC_NORMALIZE(Vec4)
 //
 // ========================================================
 
-static inline Vec3 Vec3Cross(Vec3 a, Vec3 b) {
-    return bVec3(.x = (a.y * b.z) - (a.z * b.y),
-                 .y = (a.z * b.x) - (a.x * b.z),
-                 .z = (a.x * b.y) - (a.y * b.x));
+static inline k_Vec3 k_Vec3Cross(k_Vec3 a, k_Vec3 b) {
+    return k_bVec3(.x = (a.y * b.z) - (a.z * b.y),
+                   .y = (a.z * b.x) - (a.x * b.z),
+                   .z = (a.x * b.y) - (a.y * b.x));
 }
 
-static inline Vec3 Vec3FromVec4(Vec4 v) {
-    return bVec3(.x = v.x, .y = v.y, .z = v.z);
+static inline k_Vec3 k_Vec3FromVec4(k_Vec4 v) {
+    return k_bVec3(.x = v.x, .y = v.y, .z = v.z);
 }
 
-static inline Vec4 Vec4FromVec3(Vec4 v) {
-    return bVec4(.x = v.x, .y = v.y, .z = v.z, .w = 1.0f);
+static inline k_Vec4 k_Vec4FromVec3(k_Vec4 v) {
+    return k_bVec4(.x = v.x, .y = v.y, .z = v.z, .w = 1.0f);
 }
 
 #endif  // _K_MATH_VECTOR_H_

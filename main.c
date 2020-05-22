@@ -15,6 +15,8 @@ typedef struct {
     GLuint program;
     GLuint vertexBuffer;
     GLuint colorBuffer;
+    k_Mat4 view;
+
 } Game;
 
 // static const GLfloat data[] = {-1.0f, -1.0f, 0.0f,
@@ -106,7 +108,7 @@ int main(void) {
 }
 
 static void init(k_Executable* restrict self) {
-    Game* g = Ptr(self);
+    Game* g = k_Ptr(self);
 
     g->program = loadShaderProgram();
 
@@ -119,10 +121,12 @@ static void init(k_Executable* restrict self) {
     glGenBuffers(1, &g->colorBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, g->colorBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STATIC_DRAW);
+
+    g->view = k_bMat4Translation(k_bVec3(.x = -3.0f));
 }
 
 static void step(k_Executable* restrict self, float dt) {
-    Game* g = Ptr(self);
+    Game* g = k_Ptr(self);
     GLuint cb = g->colorBuffer;
     GLuint vb = g->vertexBuffer;
 
@@ -160,7 +164,7 @@ static void step(k_Executable* restrict self, float dt) {
 
 static GLuint loadShaderProgram() {
     k_ShaderProgramLoader loader;
-    Maybe(GLuint) mprogram;
+    k_Maybe(GLuint) mprogram;
 
     strncpy(loader.VertexShaderPath, "vertex.glsl", 512);
     strncpy(loader.FragmentShaderPath, "fragment.glsl", 512);

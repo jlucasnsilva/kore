@@ -17,7 +17,7 @@ static char *loadShader(const char *restrict);
 
 static bool compileShader(GLuint, const char *restrict);
 
-static Maybe(GLuint) compileProgram(GLuint, GLuint);
+static k_Maybe(GLuint) compileProgram(GLuint, GLuint);
 
 // ========================================================
 //
@@ -25,8 +25,8 @@ static Maybe(GLuint) compileProgram(GLuint, GLuint);
 //
 // ========================================================
 
-Maybe(GLuint) k_LoadShaderProgram(k_ShaderProgramLoader *restrict info) {
-    Maybe(GLuint) ret;
+k_Maybe(GLuint) k_LoadShaderProgram(k_ShaderProgramLoader *restrict info) {
+    k_Maybe(GLuint) ret;
     char *vertexShaderCode = NULL;
     char *fragmentShaderCode = NULL;
 
@@ -57,8 +57,8 @@ Maybe(GLuint) k_LoadShaderProgram(k_ShaderProgramLoader *restrict info) {
         goto clean_up;
     }
 
-    Maybe(GLuint) maybeProgram = compileProgram(vertexShader,
-                                                fragmentShader);
+    k_Maybe(GLuint) maybeProgram = compileProgram(vertexShader,
+                                                  fragmentShader);
     glDeleteShader(fragmentShader);
     glDeleteShader(vertexShader);
     ret.value = maybeProgram.value;
@@ -118,12 +118,12 @@ static bool compileShader(GLuint shader, const char *code) {
     return true;
 }
 
-static Maybe(GLuint) compileProgram(GLuint vertexShader,
-                                    GLuint fragmentShader) {
+static k_Maybe(GLuint) compileProgram(GLuint vertexShader,
+                                      GLuint fragmentShader) {
     GLuint program = glCreateProgram();
     GLint res = GL_FALSE;
     int logLength = 0;
-    Maybe(GLuint) ret;
+    k_Maybe(GLuint) ret;
     char log[512];
 
     glAttachShader(program, vertexShader);

@@ -3,7 +3,7 @@
 
 #include "consts.h"
 
-static inline float DegreeToRad(float angle) {
+static inline float k_DegreeToRad(float angle) {
     return (angle * PI) / 180;
 }
 
