@@ -7,14 +7,6 @@ typedef union {
     struct {
         float x;
         float y;
-    };
-    float v[2];
-} k_Vec2;
-
-typedef union {
-    struct {
-        float x;
-        float y;
         float z;
     };
     float v[3];
@@ -30,9 +22,6 @@ typedef union {
     float v[4];
 } k_Vec4;
 
-#define k_Vec2Spread(v) (v).x, (v).y
-#define k_bVec2(...) ((k_Vec2){{.x = 0.0f, .y = 0.0f, __VA_ARGS__}})
-
 #define k_Vec3Spread(v) (v).x, (v).y, (v).z,
 #define k_bVec3(...) ((k_Vec3){{.x = 0.0f, .y = 0.0f, .z = 0.0f, __VA_ARGS__}})
 
@@ -43,28 +32,14 @@ typedef union {
                                 .w = 0.0f, \
                                 __VA_ARGS__}})
 
-const k_Vec2 k_Vec2Zero = k_bVec2();
-const k_Vec3 k_Vec3Zero = k_bVec3();
-const k_Vec4 k_Vec4Zero = k_bVec4();
+extern const k_Vec3 k_Vec3Zero;
+extern const k_Vec4 k_Vec4Zero;
 
 // ========================================================
 //
 // Generic
 //
 // ========================================================
-
-K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec2, Add, +)
-K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec2, Sub, -)
-K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec2, Times, *)
-K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec2, Div, /)
-K_DEFINE_VEC_PAIR_DISTANCE_SQUARED(k_Vec2)
-K_DEFINE_VEC_PAIR_DISTANCE(k_Vec2)
-K_DEFINE_VEC_PAIR_DOT(k_Vec2)
-K_DEFINE_VEC_PAIR_EQ(k_Vec2)
-K_DEFINE_VEC_LEN_SQUARED(k_Vec2)
-K_DEFINE_VEC_LEN(k_Vec2)
-K_DEFINE_VEC_SCALE(k_Vec2)
-K_DEFINE_VEC_NORMALIZE(k_Vec2)
 
 K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec3, Add, +)
 K_DEFINE_VEC_PAIR_SIMPLE_OPERATION(k_Vec3, Sub, -)

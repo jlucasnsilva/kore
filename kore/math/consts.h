@@ -1,8 +1,8 @@
 #ifndef _K_MATH_CONSTS_H_
 #define _K_MATH_CONSTS_H_
 
-const float PI = 3.14f;
+extern const float PI;
 
-const float k_FloatTolerance = 0.01f;
+extern const float k_FloatTolerance;
 
 #endif  //_K_MATH_CONSTS_H_

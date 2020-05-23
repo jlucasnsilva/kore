@@ -1,8 +1,24 @@
 #include "matrix.h"
-#include "vector.h"
-#include "angle.h"
 
 #include <math.h>
+
+void k_Mat4Mul(k_Mat4 *restrict result, const k_Mat4 *restrict a, const k_Mat4 *restrict b) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            k_Vec4 col = k_bVec4(.x = b->m[0][j],
+                                 .y = b->m[1][j],
+                                 .z = b->m[2][j],
+                                 .w = b->m[3][j]);
+            result->m[i][j] = k_Vec4Dot(a->v[i], col);
+        }
+    }
+}
+
+void k_Mat4MVP(k_Mat4 *restrict result, const k_Mat4 *restrict m, const k_Mat4 *restrict v, const k_Mat4 *restrict p) {
+    k_Mat4 aux = k_bMat4();
+    k_Mat4Mul(&aux, m, v);
+    k_Mat4Mul(result, &aux, p);
+}
 
 void k_Mat4SetVec4(k_Mat4 *restrict result, k_Vec4 a, k_Vec4 b, k_Vec4 c) {
     result->v[0] = a;
@@ -11,26 +27,145 @@ void k_Mat4SetVec4(k_Mat4 *restrict result, k_Vec4 a, k_Vec4 b, k_Vec4 c) {
     result->v[3] = k_bVec4(.x = 0.0f, .y = 0.0f, .z = 0.0f, .w = 1.0f);
 }
 
-Vec4 k_Mat4Vec4(const k_Mat4 *restrict m, k_Vec4 v) {
-    Vec4 result;
+k_Vec4 k_Mat4Vec4(const k_Mat4 *restrict m, k_Vec4 v) {
+    k_Vec4 result;
     for (int i = 0; i < 4; i++) {
         result.v[i] = k_Vec4Dot(m->v[i], v);
     }
     return result;
 }
 
+void k_Mat4XRotation(k_Mat4 *restrict result, float yaw) {
+    float angle = k_DegreeToRad(yaw);
+    float cosa = cosf(angle);
+    float sina = sinf(angle);
+    *result = k_bMat4();
+
+    result->m[0][0] = 1.0f;
+    result->m[1][1] = cosa;
+    result->m[1][2] = -sina;
+    result->m[2][1] = cosa;
+    result->m[2][2] = sina;
+}
+
+void k_Mat4YRotation(k_Mat4 *restrict result, float pitch) {
+    float angle = k_DegreeToRad(pitch);
+    float cosa = cosf(angle);
+    float sina = sinf(angle);
+    *result = k_bMat4();
+
+    result->m[1][1] = 1.0f;
+    result->m[0][0] = cosa;
+    result->m[0][1] = sina;
+    result->m[2][1] = cosa;
+    result->m[2][2] = -sina;
+}
+
+void k_Mat4ZRotation(k_Mat4 *restrict result, float roll) {
+    float angle = k_DegreeToRad(roll);
+    float cosa = cosf(angle);
+    float sina = sinf(angle);
+    *result = k_bMat4();
+
+    result->m[2][2] = 1.0f;
+    result->m[0][0] = cosa;
+    result->m[0][1] = -sina;
+    result->m[1][0] = cosa;
+    result->m[1][1] = sina;
+}
+
 void k_Mat4Rotation(k_Mat4 *restrict result, k_Vec3 rotation) {
     float a = k_DegreeToRad(rotation.x);  // yaw
     float b = k_DegreeToRad(rotation.y);  // pitch
     float c = k_DegreeToRad(rotation.z);  // roll
+    float cosa = cosf(a);
+    float sina = sinf(a);
+    float cosb = cosf(b);
+    float sinb = sinf(b);
+    float cosc = cosf(c);
+    float sinc = sinf(c);
 
-    result->m[0][0] = cosf(a) * cosf(b);
-    result->m[0][1] = cosf(a) * sinf(b) * sinf(c) - sinf(a) * cosf(c);
-    result->m[0][2] = cosf(a) * sinf(b) * cosf(c) + sinf(a) * sinf(c);
-    result->m[1][0] = sinf(a) * cosf(b);
-    result->m[1][1] = sinf(a) * sinf(b) * sinf(c) + cosf(a) * cosf(b);
-    result->m[1][2] = sinf(a) * sinf(b) * cosf(c) - cosf(a) * sinf(c);
-    result->m[2][0] = -sinf(b);
-    result->m[2][1] = cosf(b) * sinf(c);
-    result->m[2][2] = cosf(b) * cosf(c);
+    *result = k_bMat4();
+    result->m[0][0] = cosa * cosb;
+    result->m[0][1] = cosa * sinb * sinc - sina * cosc;
+    result->m[0][2] = cosa * sinb * cosc + sina * sinc;
+    result->m[1][0] = sina * cosb;
+    result->m[1][1] = sina * sinb * sinc + cosa * cosb;
+    result->m[1][2] = sina * sinb * cosc - cosa * sinc;
+    result->m[2][0] = -sinb;
+    result->m[2][1] = cosb * sinc;
+    result->m[2][2] = cosb * cosc;
 }
+
+void k_Mat4Translation(k_Mat4 *restrict result, k_Vec3 delta) {
+    *result = k_bMat4();
+    result->m[3][0] = delta.x;
+    result->m[3][1] = delta.y;
+    result->m[3][2] = delta.z;
+}
+
+void k_Mat4Scaling(k_Mat4 *restrict result, k_Vec3 delta) {
+    *result = k_bMat4();
+    result->m[0][0] = delta.x;
+    result->m[1][1] = delta.y;
+    result->m[2][2] = delta.z;
+}
+
+void k_Mat4LookAt(k_Mat4 *restrict result, k_Vec3 cameraPosition, k_Vec3 target, k_Vec3 up) {
+    k_Vec3 direction = k_Vec3Normalize(k_Vec3Sub(target, cameraPosition));
+    k_Vec3 nup = k_Vec3Normalize(up);
+    k_Vec3 side = k_Vec3Normalize(k_Vec3Cross(direction, nup));
+    k_Vec3 u = k_Vec3Cross(side, direction);
+
+    result->m[0][0] = side.x;
+    result->m[1][0] = side.y;
+    result->m[2][0] = side.z;
+    result->m[0][1] = u.x;
+    result->m[1][1] = u.y;
+    result->m[2][1] = u.z;
+    result->m[0][2] = -direction.x;
+    result->m[1][2] = -direction.y;
+    result->m[2][2] = -direction.z;
+    result->m[3][0] = -k_Vec3Dot(side, cameraPosition);
+    result->m[3][1] = -k_Vec3Dot(u, cameraPosition);
+    result->m[3][2] = k_Vec3Dot(direction, cameraPosition);
+}
+
+void k_Mat4Perspective(k_Mat4 *restrict result, float angleOfView, float aspectRatio, float near, float far) {
+    float rad = k_DegreeToRad(angleOfView);
+    float f = tanf(rad / 2.0f);
+    *result = k_bMat4();
+
+    result->m[0][0] = 1.0f / (aspectRatio * f);
+    result->m[1][1] = 1.0f / f;
+    result->m[2][2] = (far + near) / (near - far);
+    result->m[2][3] = (2.0f * far * near) / (near - far);
+    result->m[3][2] = -1.0f;
+}
+
+/*
+
+void k_Mat4Perspective(k_Mat4 *restrict result, float angleOfView, float aspectRatio, float near, float far) {
+    float rad = k_DegreeToRad(angleOfView);
+    float f = tanf(rad / 2.0f);
+    *result = k_bMat4();
+
+    result->m[0][0] = 1.0f / (aspectRatio * f);
+    result->m[1][1] = 1.0f / f;
+    result->m[2][2] = -(far + near) / (far - near);
+    result->m[2][3] = -1.0f;
+    result->m[3][2] = -(2.0f * far * near) / (far - near);
+}
+
+*/
+
+#ifdef DebugBuild
+#include <stdio.h>
+void k_Mat4Print(const k_Mat4 *restrict m) {
+    puts("\n");
+    for (int i = 0; i < 4; i++) {
+        printf("| %-5.2f %-5.2f %5.2f %5.2f |\n", m->m[i][0], m->m[i][1], m->m[i][2], m->m[i][3]);
+    }
+    puts("\n");
+}
+#endif
