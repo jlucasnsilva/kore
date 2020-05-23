@@ -41,6 +41,7 @@ void k_Init(void) {
 }
 
 void k_Quit(void) {
+    glDeleteVertexArrays(1, &k_gVertexArray);
     SDL_GL_DeleteContext(k_gWindow);
     SDL_DestroyWindow(k_gWindow);
     SDL_Quit();
@@ -71,6 +72,7 @@ void k_Run(k_Executable *restrict exec) {
         SDL_GL_SwapWindow(k_gWindow);
         currentTime = SDL_GetTicks();
     }
+    exec->Quit(exec);
 }
 
 // ========================================================

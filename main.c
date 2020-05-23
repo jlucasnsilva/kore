@@ -6,6 +6,7 @@
 #include <math.h>
 
 static void init(k_Executable* restrict self);
+static void quit(k_Executable* restrict self);
 static void step(k_Executable* restrict self, float dt);
 
 static GLuint loadShaderProgram();
@@ -16,22 +17,22 @@ typedef struct {
     GLuint vertexBuffer;
     GLuint colorBuffer;
     k_Mat4 projection;
-    k_Mat4 camera;
     k_Mat4 model;
     k_Mat4 view;
     k_Mat4 mvp;
     GLuint mvpID;
 } Game;
 
-static const GLfloat data[] = {-1.0f, -1.0f, 0.0f,
-                               1.0f, -1.0f, 0.0f,
-                               0.0f, 1.0f, 0.0f};
-
-static const GLfloat color[] = {0.583f, 0.771f, 0.014f,
-                                0.609f, 0.115f, 0.436f,
-                                0.327f, 0.483f, 0.844f};
-
 /*
+static GLfloat data[] = {-1.0f, -1.0f, 0.0f,
+                         1.0f, -1.0f, 0.0f,
+                         0.0f, 1.0f, 0.0f};
+
+static GLfloat color[] = {0.583f, 0.771f, 0.014f,
+                          0.609f, 0.115f, 0.436f,
+                          0.327f, 0.483f, 0.844f};
+*/
+
 static const GLfloat data[] = {-1.0f, -1.0f, -1.0f,
                                -1.0f, -1.0f, 1.0f,
                                -1.0f, 1.0f, 1.0f,
@@ -105,11 +106,10 @@ static const GLfloat color[] = {0.583f, 0.771f, 0.014f,
                                 0.673f, 0.211f, 0.457f,
                                 0.820f, 0.883f, 0.371f,
                                 0.982f, 0.099f, 0.879f};
-*/
 
 int main(void) {
     Game game;
-    game.exec = k_bExecutable(.Step = step, .Init = init);
+    game.exec = k_bExecutable(.Step = step, .Init = init, .Quit = quit);
 
     k_Init();
     k_Run(&game.exec);
@@ -119,6 +119,11 @@ int main(void) {
 
 static void init(k_Executable* restrict self) {
     Game* g = k_Ptr(self);
+
+    k_Mat4LookAt(&g->view, k_bVec3(.x = 4, .y = 3, .z = 3), k_bVec3(), k_bVec3(.y = 1));
+    k_Mat4Perspective(&g->projection, 45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+    g->model = k_bMat4I();
+    k_Mat4MVP(&g->mvp, &g->model, &g->view, &g->projection);
 
     g->program = loadShaderProgram();
 
@@ -130,43 +135,7 @@ static void init(k_Executable* restrict self) {
     glBindBuffer(GL_ARRAY_BUFFER, g->colorBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STATIC_DRAW);
 
-    k_Mat4LookAt(&g->camera, k_bVec3(.x = 4, .y = 3, .z = 3), k_bVec3(), k_bVec3(.y = 1));
-    k_Mat4Perspective(&g->projection, 45.0f, 1920.0f / 1080.0f, 0.1f, 100.0f);
-    g->view = k_bMat4Translation(k_bVec3(.x = -3.0f));
-    g->model = k_bMat4I();
-    k_Mat4MVP(&g->mvp, &g->model, &g->view, &g->projection);
-
-#ifdef DebugBuild
-    puts("MVP");
-    k_Mat4Print(&g->mvp);
-    puts("Model");
-    k_Mat4Print(&g->model);
-    puts("View");
-    k_Mat4Print(&g->view);
-    puts("Projection");
-    k_Mat4Print(&g->projection);
-#endif
-
     g->mvpID = glGetUniformLocation(g->program, "MVP");
-    glUniformMatrix4fv(g->mvpID, 1, GL_FALSE, (const GLfloat*)&g->mvp.v[0]);
-
-    // ======================
-    // ======================
-    // ======================
-    // ======================
-
-    puts("\n\n\n");
-    k_Vec3* v3s = (void*)data;
-    k_Vec4 v4 = k_bVec4(.z = 1.0f);
-    k_Vec4 end = k_bVec4();
-    for (int i = 0; i < 3; i++) {
-        v4.x = v3s[i].x;
-        v4.y = v3s[i].y;
-        v4.z = v3s[i].z;
-
-        end = k_Mat4Vec4(&g->mvp, v4);
-        printf("[%d] => (%.2f, %.2f, %.2f)\n", i, end.x, end.y, end.z);
-    }
 }
 
 static void step(k_Executable* restrict self, float dt) {
@@ -175,6 +144,7 @@ static void step(k_Executable* restrict self, float dt) {
     GLuint vb = g->vertexBuffer;
 
     glUseProgram(g->program);
+    glUniformMatrix4fv(g->mvpID, 1, GL_FALSE, (const GLfloat*)&g->mvp.m[0][0]);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vb);
@@ -186,8 +156,7 @@ static void step(k_Executable* restrict self, float dt) {
         0,         // stride
         (void*)0   // array buffer offset
     );
-    // glDrawArrays(GL_TRIANGLES, 0, 36);
-    glDrawArrays(GL_TRIANGLES, 0, 9);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
     glDisableVertexAttribArray(0);
 
     glEnableVertexAttribArray(1);
@@ -214,4 +183,9 @@ static GLuint loadShaderProgram() {
         exit(EXIT_FAILURE);
     }
     return mprogram.value;
+}
+
+static void quit(k_Executable* restrict self) {
+    Game* g = k_Ptr(self);
+    glDeleteProgram(g->program);
 }

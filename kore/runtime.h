@@ -9,6 +9,7 @@ typedef void (*k_ExecutableFunc)(k_Executable* self);
 struct k_Executable {
     k_ExecutableFunc Init;
     k_StepFunc Step;
+    k_ExecutableFunc Quit;
 };
 
 #define k_bExecutable(...) ((k_Executable){.Step = NULL, __VA_ARGS__})

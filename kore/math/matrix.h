@@ -56,6 +56,7 @@ void k_Mat4Rotation(k_Mat4 *restrict result, k_Vec3 rotation);
 
 void k_Mat4Translation(k_Mat4 *restrict result, k_Vec3 delta);
 
+void k_Mat4Scale(k_Mat4 *restrict result, k_Mat4 *restrict m, float s);
 void k_Mat4Scaling(k_Mat4 *restrict result, k_Vec3 delta);
 
 void k_Mat4LookAt(k_Mat4 *restrict result, k_Vec3 cameraPosition, k_Vec3 target, k_Vec3 up);
