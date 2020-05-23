@@ -10,7 +10,9 @@
 
 typedef struct k_Renderer k_Renderer;
 
-k_Renderer* k_RendererCreate(GLuint program);
+// k_Renderer* k_RendererCreate(GLuint program);
+k_Renderer* k_RendererCreate(GLuint program, float* data, float* colors, size_t size);
+
 void k_RendererDestroy(k_Renderer* r);
 
 void k_RendererDrawTriangles(k_Renderer* r,

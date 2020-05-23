@@ -10,7 +10,8 @@ struct k_Renderer {
     GLuint mvp;
 };
 
-k_Renderer* k_RendererCreate(GLuint program) {
+// k_Renderer* k_RendererCreate(GLuint program) {
+k_Renderer* k_RendererCreate(GLuint program, float* data, float* colors, size_t size) {
     k_Renderer* r = malloc(sizeof(k_Renderer));
     if (!r) {
         return NULL;
@@ -18,9 +19,11 @@ k_Renderer* k_RendererCreate(GLuint program) {
 
     glGenBuffers(1, &r->vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, r->vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
     glGenBuffers(1, &r->colorBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, r->colorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(data), colors, GL_STATIC_DRAW);
 
     r->mvp = glGetUniformLocation(program, "MVP");
     return r;
@@ -40,7 +43,7 @@ void k_RendererDrawTriangles(k_Renderer* r,
                              const k_Mat4* restrict mvp,
                              const float* restrict data,
                              size_t size) {
-    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    // glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
     glUniformMatrix4fv(r->mvp, 1, GL_FALSE, (const GLfloat*)&mvp->m[0][0]);
 
     glEnableVertexAttribArray(0);
@@ -63,7 +66,7 @@ void k_RendererDrawTriangles(k_Renderer* r,
 }
 
 void k_RendererColorTriangles(k_Renderer* r, const float* restrict data, size_t size) {
-    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    // glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, r->colorBuffer);
     glVertexAttribPointer(
