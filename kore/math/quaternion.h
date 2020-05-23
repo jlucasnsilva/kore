@@ -23,7 +23,7 @@ typedef union {
                                             .z = 0.0f, \
                                             __VA_ARGS__}})
 
-const k_Quaternion QuaternionZero = k_bQuaternion();
+extern const k_Quaternion QuaternionZero;
 
 static inline k_Quaternion k_QuaternionMake(float w, k_Vec3 v) {
     return k_bQuaternion(.x = v.x, .y = v.y, .z = v.z, .w = w);
