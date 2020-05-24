@@ -1,7 +1,7 @@
-#ifndef _K_SHAPE_H_
-#define _K_SHAPE_H_
+#ifndef _K_GRAPHICS_SHAPE_H_
+#define _K_GRAPHICS_SHAPE_H_
 
-#include "../math/math.h"
+#include "../../math/math.h"
 
 typedef struct {
     k_Vec3 vertices[3];
@@ -30,9 +30,9 @@ void k_RectangleMake(k_Rectangle *restrict target,
     target->top.vertices[1] = topRight;
     target->top.vertices[2] = bottomLeft;
 
-    target->bottom.vertices[2] = topRight;
-    target->bottom.vertices[3] = bottomRight;
-    target->bottom.vertices[4] = bottomLeft;
+    target->bottom.vertices[0] = topRight;
+    target->bottom.vertices[1] = bottomRight;
+    target->bottom.vertices[2] = bottomLeft;
 }
 
 void k_CubeMake(k_Cube *restrict target, k_Vec3 center, float length) {
@@ -72,4 +72,4 @@ void k_CubeMake(k_Cube *restrict target, k_Vec3 center, float length) {
                     k_bVec3(.y = less.y, .z = plus.z, .x = plus.x));
 }
 
-#endif  //_K_SHAPE_H_
+#endif  //_K_GRAPHICS_SHAPE_H_

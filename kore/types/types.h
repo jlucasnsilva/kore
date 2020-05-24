@@ -1,7 +1,7 @@
-#ifndef _K_TYPES_H_
-#define _K_TYPES_H_
+#ifndef _K_TYPES_TYPES_H_
+#define _K_TYPES_TYPES_H_
 
-#include "../util.h"
+#include "../util/util.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -14,4 +14,4 @@ K_DEFINE_MAYBE(char);
 
 K_DEFINE_MAYBE(GLuint);
 
-#endif  // _K_TYPES_H_
+#endif  // _K_TYPES_TYPES_H_

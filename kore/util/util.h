@@ -1,5 +1,5 @@
-#ifndef _K_UTIL_H_
-#define _K_UTIL_H_
+#ifndef _K_UTIL_UTIL_H_
+#define _K_UTIL_UTIL_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -29,4 +29,4 @@
 
 #define k_Ptr(x) ((void *)(x))
 
-#endif  // _K_UTIL_H_
+#endif  // _K_UTIL_UTIL_H_

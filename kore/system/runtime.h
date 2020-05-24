@@ -1,5 +1,5 @@
-#ifndef _K_RUNTIME_H_
-#define _K_RUNTIME_H_
+#ifndef _K_SYSTEM_RUNTIME_H_
+#define _K_SYSTEM_RUNTIME_H_
 
 typedef struct k_Executable k_Executable;
 
@@ -20,4 +20,4 @@ void k_Quit(void);
 
 void k_Run(k_Executable* restrict);
 
-#endif  // _K_RUNTIME_H_
+#endif  // _K_SYSTEM_RUNTIME_H_

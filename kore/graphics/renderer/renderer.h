@@ -1,7 +1,7 @@
-#ifndef _K_RENDER_H_
-#define _K_RENDER_H_
+#ifndef _K_GRAPHICS_RENDERER_H_
+#define _K_GRAPHICS_RENDERER_H_
 
-#include "../math/math.h"
+#include "../../math/math.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -22,4 +22,4 @@ void k_RendererDrawTriangles(k_Renderer* r,
 
 void k_RendererColorTriangles(k_Renderer* r, const float* restrict data, size_t size);
 
-#endif  // _K_RENDER_H_
+#endif  // _K_GRAPHICS_RENDERER_H_

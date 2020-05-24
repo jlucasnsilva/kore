@@ -1,5 +1,5 @@
-#ifndef _K_VAR_H_
-#define _K_VAR_H_
+#ifndef _K_SYSTEM_VAR_H_
+#define _K_SYSTEM_VAR_H_
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -15,4 +15,4 @@ extern int k_gFramesPerSecond;
 
 extern GLuint k_gVertexArray;
 
-#endif  // _K_VAR_H_
+#endif  // _K_SYSTEM_VAR_H_

@@ -158,7 +158,7 @@ static void init(k_Executable* restrict self) {
 
 static void step(k_Executable* restrict self, float dt) {
     Game* g = k_Ptr(self);
-    k_Renderer* r = g->renderer;
+    // k_Renderer* r = g->renderer;
 
     glUseProgram(g->program);
     glUniformMatrix4fv(mvpID, 1, GL_FALSE, (const GLfloat*)&g->mvp.m[0][0]);

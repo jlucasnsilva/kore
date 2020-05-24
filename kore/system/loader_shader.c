@@ -1,7 +1,9 @@
 #include "loader.h"
-#include "util.h"
-#include "memory/memory.h"
-#include "log/log.h"
+#include "../util/util.h"
+#include "../memory/memory.h"
+#include "../log/log.h"
+
+#include <SDL2/SDL.h>
 
 #include <string.h>
 #include <stdlib.h>

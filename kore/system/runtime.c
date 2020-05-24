@@ -7,8 +7,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "memory/memory.h"
-#include "log/log.h"
+#include "../memory/memory.h"
+#include "../log/log.h"
 #include "runtime.h"
 #include "var.h"
 

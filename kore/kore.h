@@ -1,18 +1,18 @@
 #ifndef _K_KORE_H_
 #define _K_KORE_H_
 
-#include "loader.h"
-#include "runtime.h"
-#include "string.h"
-#include "util.h"
-#include "var.h"
+#include "system/loader.h"
+#include "system/runtime.h"
+#include "system/var.h"
+#include "types/string.h"
+#include "util/util.h"
 
 #include "log/log.h"
 #include "math/math.h"
 #include "types/types.h"
-#include "shape/shape.h"
-#include "render/render.h"
+#include "graphics/shape/shape.h"
+#include "graphics/renderer/renderer.h"
 #include "memory/memory.h"
-#include "datastructure/datastructure.h"
+#include "memory/datastructures/datastructures.h"
 
 #endif  // _K_KORE_H_
