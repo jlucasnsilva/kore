@@ -20,14 +20,6 @@ void k_Mat4MVP(k_Mat4 *restrict result, const k_Mat4 *restrict m, const k_Mat4 *
     k_Mat4Mul(result, m, &aux);
 }
 
-/*
-void k_Mat4MVP(k_Mat4 *restrict result, const k_Mat4 *restrict m, const k_Mat4 *restrict v, const k_Mat4 *restrict p) {
-    k_Mat4 aux = k_bMat4();
-    k_Mat4Mul(&aux, m, v);
-    k_Mat4Mul(result, &aux, p);
-}
-*/
-
 void k_Mat4SetVec4(k_Mat4 *restrict result, k_Vec4 a, k_Vec4 b, k_Vec4 c) {
     result->v[0] = a;
     result->v[1] = b;
@@ -159,22 +151,6 @@ void k_Mat4Perspective(k_Mat4 *restrict result, float angleOfView, float aspectR
     result->m[2][3] = -1.0f;
     result->m[3][2] = -(2.0f * far * near) / (far - near);
 }
-
-/*
-
-void k_Mat4Perspective(k_Mat4 *restrict result, float angleOfView, float aspectRatio, float near, float far) {
-    float rad = k_DegreeToRad(angleOfView);
-    float f = tanf(rad / 2.0f);
-    *result = k_bMat4();
-
-    result->m[0][0] = 1.0f / (aspectRatio * f);
-    result->m[1][1] = 1.0f / f;
-    result->m[2][2] = -(far + near) / (far - near);
-    result->m[2][3] = -1.0f;
-    result->m[3][2] = -(2.0f * far * near) / (far - near);
-}
-
-*/
 
 #ifdef DebugBuild
 #include <stdio.h>

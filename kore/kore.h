@@ -10,6 +10,7 @@
 #include "log/log.h"
 #include "math/math.h"
 #include "types/types.h"
+#include "shape/shape.h"
 #include "render/render.h"
 #include "memory/memory.h"
 #include "datastructure/datastructure.h"

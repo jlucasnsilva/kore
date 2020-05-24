@@ -5,11 +5,10 @@
 
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include <SDL2/SDL.h>
 
 #include <stdint.h>
 
-typedef uint32_t Rune;
+typedef uint32_t k_Rune;
 
 K_DEFINE_MAYBE(char);
 
