@@ -44,6 +44,7 @@ typedef union {
                                                  {0.0f, 0.0f, sscalar, 0.0f}, \
                                                  {0.0f, 0.0f, 0.0f, 1.0f}}})
 
+void k_Mat4Add(k_Mat4 *restrict result, const k_Mat4 *restrict a);
 void k_Mat4Mul(k_Mat4 *restrict result, const k_Mat4 *restrict a, const k_Mat4 *restrict b);
 void k_Mat4MVP(k_Mat4 *restrict result, const k_Mat4 *restrict m, const k_Mat4 *restrict v, const k_Mat4 *restrict p);
 void k_Mat4SetVec4(k_Mat4 *restrict result, k_Vec4 a, k_Vec4 b, k_Vec4 c);

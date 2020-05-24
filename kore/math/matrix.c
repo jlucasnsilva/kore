@@ -2,6 +2,12 @@
 
 #include <math.h>
 
+void k_Mat4Add(k_Mat4 *restrict result, const k_Mat4 *restrict a) {
+    for (int i = 0; i < 4; i++) {
+        result->v[i] = k_Vec4Add(a->v[i], result->v[i]);
+    }
+}
+
 void k_Mat4Mul(k_Mat4 *restrict result, const k_Mat4 *restrict a, const k_Mat4 *restrict b) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
@@ -46,6 +52,8 @@ void k_Mat4XRotation(k_Mat4 *restrict result, float yaw) {
     result->m[1][2] = -sina;
     result->m[2][1] = cosa;
     result->m[2][2] = sina;
+
+    result->m[3][3] = 1.0f;
 }
 
 void k_Mat4YRotation(k_Mat4 *restrict result, float pitch) {
@@ -59,6 +67,8 @@ void k_Mat4YRotation(k_Mat4 *restrict result, float pitch) {
     result->m[0][1] = sina;
     result->m[2][1] = cosa;
     result->m[2][2] = -sina;
+
+    result->m[3][3] = 1.0f;
 }
 
 void k_Mat4ZRotation(k_Mat4 *restrict result, float roll) {
@@ -72,6 +82,8 @@ void k_Mat4ZRotation(k_Mat4 *restrict result, float roll) {
     result->m[0][1] = -sina;
     result->m[1][0] = cosa;
     result->m[1][1] = sina;
+
+    result->m[3][3] = 1.0f;
 }
 
 void k_Mat4Rotation(k_Mat4 *restrict result, k_Vec3 rotation) {
@@ -95,6 +107,8 @@ void k_Mat4Rotation(k_Mat4 *restrict result, k_Vec3 rotation) {
     result->m[2][0] = -sinb;
     result->m[2][1] = cosb * sinc;
     result->m[2][2] = cosb * cosc;
+
+    result->m[3][3] = 1.0f;
 }
 
 void k_Mat4Translation(k_Mat4 *restrict result, k_Vec3 delta) {
