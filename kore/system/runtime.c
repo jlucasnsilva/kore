@@ -60,17 +60,19 @@ void k_Run(k_Executable *restrict exec) {
 
     exec->Init(exec);
     while (!quit) {
-        timeDiff = lasTime - currentTime;
-        if (timeDiff >= frameTime) {
-            lasTime = currentTime;
-            handleEvents(&quit);
+        currentTime = SDL_GetTicks();
+        timeDiff = currentTime - lasTime;
+        if (timeDiff < frameTime) {
+            continue;
         }
+
+        lasTime = currentTime;
+        handleEvents(&quit);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         exec->Step(exec, timeDiff / 1000.0);
 
         SDL_GL_SwapWindow(k_gWindow);
-        currentTime = SDL_GetTicks();
     }
     exec->Quit(exec);
 }

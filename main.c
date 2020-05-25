@@ -19,9 +19,7 @@ typedef struct {
     k_Mat4 model;
     k_Mat4 view;
     k_Mat4 mvp;
-    k_Mat4 rot;
-    float xAngle;
-    float yAngle;
+    k_Vec3 rotation;
 } Game;
 
 static k_Cube cube;
@@ -60,6 +58,7 @@ static void init(k_Executable* restrict self) {
     k_CubeColor(color);
     data = k_Ptr(&cube);
 
+    g->rotation = k_bVec3();
     g->model = k_bMat4I();
     k_Mat4LookAt(&g->view, k_bVec3(.x = -5.0f, .y = 5.0f, .z = -5.0f), k_bVec3(), k_bVec3(.y = 1));
     k_Mat4Perspective(&g->projection, 45.0f, 16.0f / 9.0f, 0.1f, 100.0f);
@@ -67,6 +66,7 @@ static void init(k_Executable* restrict self) {
 
     g->program = loadShaderProgram();
 
+    SDL_Surface;
     glGenBuffers(1, &vertexBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, 3 * 36 * sizeof(float), data, GL_STATIC_DRAW);
@@ -77,8 +77,6 @@ static void init(k_Executable* restrict self) {
 
     mvpID = glGetUniformLocation(g->program, "MVP");
     rotID = glGetUniformLocation(g->program, "ROT");
-
-    k_Mat4Rotation(&g->rot, k_bVec3(.x = 30.0f, .y = 30.0f));
 
     // g->renderer = k_RendererCreate(g->program);
     // if (!g->renderer) {
@@ -92,13 +90,15 @@ static void step(k_Executable* restrict self, float dt) {
     // k_Renderer* r = g->renderer;
 
     k_Mat4 rot;
-    k_Mat4Rotation(&rot, k_bVec3(.x = 180.0f * dt, .y = 180.0f * dt, .z = 180.f * dt));
-    k_Mat4Add(&g->rot, &rot);
-    k_Mat4Print(&g->rot);
+
+    g->rotation = k_Vec3Add(g->rotation, k_bVec3(.x = 3.6 * dt,
+                                                 .y = 3.6 * dt,
+                                                 .z = -3.6 * dt));
+    k_Mat4Rotation(&rot, g->rotation);
 
     glUseProgram(g->program);
     glUniformMatrix4fv(mvpID, 1, GL_FALSE, (const GLfloat*)&g->mvp.m[0][0]);
-    glUniformMatrix4fv(rotID, 1, GL_FALSE, (const GLfloat*)&g->rot.m[0][0]);
+    glUniformMatrix4fv(rotID, 1, GL_FALSE, (const GLfloat*)&rot.m[0][0]);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
