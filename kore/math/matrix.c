@@ -45,13 +45,13 @@ void k_Mat4XRotation(k_Mat4 *restrict result, float yaw) {
     float angle = k_DegreeToRad(yaw);
     float cosa = cosf(angle);
     float sina = sinf(angle);
-    *result = k_bMat4();
+    *result = k_bMat4I();
 
     result->m[0][0] = 1.0f;
     result->m[1][1] = cosa;
     result->m[1][2] = -sina;
-    result->m[2][1] = cosa;
-    result->m[2][2] = sina;
+    result->m[2][1] = sina;
+    result->m[2][2] = cosa;
 
     result->m[3][3] = 1.0f;
 }
@@ -60,13 +60,13 @@ void k_Mat4YRotation(k_Mat4 *restrict result, float pitch) {
     float angle = k_DegreeToRad(pitch);
     float cosa = cosf(angle);
     float sina = sinf(angle);
-    *result = k_bMat4();
+    *result = k_bMat4I();
 
     result->m[1][1] = 1.0f;
     result->m[0][0] = cosa;
-    result->m[0][1] = sina;
-    result->m[2][1] = cosa;
-    result->m[2][2] = -sina;
+    result->m[0][2] = sina;
+    result->m[2][0] = -sina;
+    result->m[2][2] = cosa;
 
     result->m[3][3] = 1.0f;
 }
@@ -75,18 +75,29 @@ void k_Mat4ZRotation(k_Mat4 *restrict result, float roll) {
     float angle = k_DegreeToRad(roll);
     float cosa = cosf(angle);
     float sina = sinf(angle);
-    *result = k_bMat4();
+    *result = k_bMat4I();
 
     result->m[2][2] = 1.0f;
     result->m[0][0] = cosa;
     result->m[0][1] = -sina;
-    result->m[1][0] = cosa;
-    result->m[1][1] = sina;
+    result->m[1][0] = sina;
+    result->m[1][1] = cosa;
 
     result->m[3][3] = 1.0f;
 }
 
 void k_Mat4Rotation(k_Mat4 *restrict result, k_Vec3 rotation) {
+    k_Mat4 aux1;
+    k_Mat4 aux2;
+    k_Mat4 aux3;
+
+    k_Mat4XRotation(&aux2, rotation.x);
+    k_Mat4YRotation(&aux3, rotation.y);
+    k_Mat4Mul(&aux1, &aux2, &aux3);
+
+    k_Mat4ZRotation(&aux2, rotation.z);
+    k_Mat4Mul(result, &aux1, &aux2);
+    /*
     float a = k_DegreeToRad(rotation.x);  // yaw
     float b = k_DegreeToRad(rotation.y);  // pitch
     float c = k_DegreeToRad(rotation.z);  // roll
@@ -97,7 +108,7 @@ void k_Mat4Rotation(k_Mat4 *restrict result, k_Vec3 rotation) {
     float cosc = cosf(c);
     float sinc = sinf(c);
 
-    *result = k_bMat4();
+    *result = k_bMat4I();
     result->m[0][0] = cosa * cosb;
     result->m[0][1] = cosa * sinb * sinc - sina * cosc;
     result->m[0][2] = cosa * sinb * cosc + sina * sinc;
@@ -109,10 +120,11 @@ void k_Mat4Rotation(k_Mat4 *restrict result, k_Vec3 rotation) {
     result->m[2][2] = cosb * cosc;
 
     result->m[3][3] = 1.0f;
+    */
 }
 
 void k_Mat4Translation(k_Mat4 *restrict result, k_Vec3 delta) {
-    *result = k_bMat4();
+    *result = k_bMat4I();
     result->m[3][0] = delta.x;
     result->m[3][1] = delta.y;
     result->m[3][2] = delta.z;
@@ -127,7 +139,7 @@ void k_Mat4Scale(k_Mat4 *restrict result, k_Mat4 *restrict m, float s) {
 }
 
 void k_Mat4Scaling(k_Mat4 *restrict result, k_Vec3 delta) {
-    *result = k_bMat4();
+    *result = k_bMat4I();
     result->m[0][0] = delta.x;
     result->m[1][1] = delta.y;
     result->m[2][2] = delta.z;

@@ -60,7 +60,8 @@ static void init(k_Executable* restrict self) {
 
     g->rotation = k_bVec3();
     g->model = k_bMat4I();
-    k_Mat4LookAt(&g->view, k_bVec3(.x = -5.0f, .y = 5.0f, .z = -5.0f), k_bVec3(), k_bVec3(.y = 1));
+    k_Mat4LookAt(&g->view, k_bVec3(.z = -15.0f), k_bVec3(), k_bVec3(.y = 1));
+    // k_Mat4LookAt(&g->view, k_bVec3(.x = -15.0f, .y = 15.0f, .z = -15.0f), k_bVec3(), k_bVec3(.y = 1));
     k_Mat4Perspective(&g->projection, 45.0f, 16.0f / 9.0f, 0.1f, 100.0f);
     k_Mat4MVP(&g->mvp, &g->model, &g->view, &g->projection);
 
@@ -76,15 +77,29 @@ static void step(k_Executable* restrict self, float dt) {
     Game* g = k_Ptr(self);
     k_Renderer* r = g->renderer;
 
-    k_Mat4 rot;
+    k_Mat4 rotate;
+    k_Mat4 translate;
+    k_Mat4 transform;
 
-    g->rotation = k_Vec3Add(g->rotation, k_bVec3(.x = 3.6 * dt,
-                                                 .y = 3.6 * dt,
-                                                 .z = -3.6 * dt));
-    k_Mat4Rotation(&rot, g->rotation);
+    g->rotation = k_Vec3Add(g->rotation, k_bVec3(.y = 3.6 * dt));
 
     glUseProgram(g->program);
-    k_RendererDrawTriangles(r, &rot, &g->mvp, data, sizeof(cube));
+
+    k_Mat4Rotation(&rotate, g->rotation);
+    k_Mat4Translation(&translate, k_bVec3(.x = -4.0f, .z = 4.0));
+    k_Mat4Mul(&transform, &rotate, &translate);
+    k_RendererDrawTriangles(r, &transform, &g->mvp, data, sizeof(cube));
+    k_RendererColorTriangles(r, color, sizeof(color));
+
+    k_Mat4Rotation(&rotate, g->rotation);
+    k_Mat4Translation(&translate, k_bVec3(.z = 4.0f));
+    k_Mat4Mul(&transform, &rotate, &translate);
+    k_RendererDrawTriangles(r, &transform, &g->mvp, data, sizeof(cube));
+    k_RendererColorTriangles(r, color, sizeof(color));
+
+    k_Mat4Translation(&translate, k_bVec3(.x = 4.0f, .z = 4.0));
+    k_Mat4Mul(&transform, &rotate, &translate);
+    k_RendererDrawTriangles(r, &transform, &g->mvp, data, sizeof(cube));
     k_RendererColorTriangles(r, color, sizeof(color));
 }
 
