@@ -11,7 +11,6 @@ struct k_Renderer {
     GLuint colorBuffer;
     GLuint transform;
     GLuint mvp;
-    size_t lastSize;
 };
 
 // k_Renderer* k_RendererCreate(GLuint program) {
@@ -31,7 +30,6 @@ k_Renderer* k_RendererCreate(GLuint program) {
 
     r->transform = glGetUniformLocation(program, "Transform");
     r->mvp = glGetUniformLocation(program, "MVP");
-    r->lastSize = _64Kb;
     return r;
 }
 
@@ -60,7 +58,6 @@ void k_RendererDrawTriangles(k_Renderer* r,
                        GL_FALSE,
                        (const GLfloat*)&mvp->m[0][0]);
 
-    r->lastSize = size;
     glNamedBufferSubData(r->vertexBuffer, 0, size, data);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, r->vertexBuffer);
@@ -78,8 +75,10 @@ void k_RendererDrawTriangles(k_Renderer* r,
     glDisableVertexAttribArray(0);
 }
 
-void k_RendererColorTriangles(k_Renderer* r, const float* restrict data) {
-    glNamedBufferSubData(r->colorBuffer, 0, r->lastSize, data);
+void k_RendererColorTriangles(k_Renderer* r,
+                              const float* restrict data,
+                              size_t size) {
+    glNamedBufferSubData(r->colorBuffer, 0, size, data);
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, r->colorBuffer);
     glVertexAttribPointer(
@@ -90,5 +89,5 @@ void k_RendererColorTriangles(k_Renderer* r, const float* restrict data) {
         0,         // stride
         (void*)0   // array buffer offset
     );
-    glDisableVertexAttribArray(1);
+    // glDisableVertexAttribArray(1);
 }

@@ -79,11 +79,12 @@ clean_up:
 // ========================================================
 
 static char *loadShader(const char *restrict filepath) {
-    size_t capacity = 512;
+    size_t capacity = 2048;
     char *content = (char *)malloc(capacity);
     if (!content) {
         return NULL;
     }
+    memset(content, '\0', 2048);
 
     SDL_RWops *in = SDL_RWFromFile(filepath, "r");
     if (!in) {
@@ -97,7 +98,6 @@ static char *loadShader(const char *restrict filepath) {
         return NULL;
     }
     SDL_RWclose(in);
-
     return content;
 }
 

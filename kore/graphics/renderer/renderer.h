@@ -20,6 +20,8 @@ void k_RendererDrawTriangles(k_Renderer* r,
                              const float* restrict data,
                              size_t size);
 
-void k_RendererColorTriangles(k_Renderer* r, const float* restrict data);
+void k_RendererColorTriangles(k_Renderer* r,
+                              const float* restrict data,
+                              size_t size);
 
 #endif  // _K_GRAPHICS_RENDERER_H_

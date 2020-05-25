@@ -98,7 +98,7 @@ static void step(k_Executable* restrict self, float dt) {
 
     glUseProgram(g->program);
     k_RendererDrawTriangles(r, &rot, &g->mvp, data, sizeof(cube));
-    k_RendererColorTriangles(r, color);
+    k_RendererColorTriangles(r, color, sizeof(color));
 
     /*
     glUniformMatrix4fv(mvpID, 1, GL_FALSE, (const GLfloat*)&g->mvp.m[0][0]);
