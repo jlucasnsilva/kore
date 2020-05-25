@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 
+typedef char k_Char;
 typedef uint32_t k_Rune;
 
 K_DEFINE_MAYBE(char);

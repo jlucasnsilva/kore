@@ -4,14 +4,18 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
+static const size_t _64Kb = 64 * 1024;
+
 struct k_Renderer {
     GLuint vertexBuffer;
     GLuint colorBuffer;
+    GLuint transform;
     GLuint mvp;
+    size_t lastSize;
 };
 
 // k_Renderer* k_RendererCreate(GLuint program) {
-k_Renderer* k_RendererCreate(GLuint program, float* data, float* colors, size_t size) {
+k_Renderer* k_RendererCreate(GLuint program) {
     k_Renderer* r = malloc(sizeof(k_Renderer));
     if (!r) {
         return NULL;
@@ -19,13 +23,15 @@ k_Renderer* k_RendererCreate(GLuint program, float* data, float* colors, size_t 
 
     glGenBuffers(1, &r->vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, r->vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, _64Kb, NULL, GL_DYNAMIC_DRAW);
 
     glGenBuffers(1, &r->colorBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, r->colorBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(data), colors, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, _64Kb, NULL, GL_DYNAMIC_DRAW);
 
+    r->transform = glGetUniformLocation(program, "Transform");
     r->mvp = glGetUniformLocation(program, "MVP");
+    r->lastSize = _64Kb;
     return r;
 }
 
@@ -40,12 +46,22 @@ void k_RendererDestroy(k_Renderer* r) {
 }
 
 void k_RendererDrawTriangles(k_Renderer* r,
+                             const k_Mat4* restrict transform,
                              const k_Mat4* restrict mvp,
                              const float* restrict data,
                              size_t size) {
-    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-    glUniformMatrix4fv(r->mvp, 1, GL_FALSE, (const GLfloat*)&mvp->m[0][0]);
+    glUniformMatrix4fv(r->transform,
+                       1,
+                       GL_FALSE,
+                       (const GLfloat*)&transform->m[0][0]);
 
+    glUniformMatrix4fv(r->mvp,
+                       1,
+                       GL_FALSE,
+                       (const GLfloat*)&mvp->m[0][0]);
+
+    r->lastSize = size;
+    glNamedBufferSubData(r->vertexBuffer, 0, size, data);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, r->vertexBuffer);
     glVertexAttribPointer(
@@ -57,12 +73,13 @@ void k_RendererDrawTriangles(k_Renderer* r,
         (void*)0   // array buffer offset
     );
 
-    glDrawArrays(GL_TRIANGLES, 0, size / (2 * sizeof(float)));
+    size_t count = size / (3 * sizeof(float));
+    glDrawArrays(GL_TRIANGLES, 0, count);
     glDisableVertexAttribArray(0);
 }
 
-void k_RendererColorTriangles(k_Renderer* r, const float* restrict data, size_t size) {
-    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+void k_RendererColorTriangles(k_Renderer* r, const float* restrict data) {
+    glNamedBufferSubData(r->colorBuffer, 0, r->lastSize, data);
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, r->colorBuffer);
     glVertexAttribPointer(
@@ -73,4 +90,5 @@ void k_RendererColorTriangles(k_Renderer* r, const float* restrict data, size_t 
         0,         // stride
         (void*)0   // array buffer offset
     );
+    glDisableVertexAttribArray(1);
 }

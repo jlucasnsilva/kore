@@ -10,16 +10,16 @@
 
 typedef struct k_Renderer k_Renderer;
 
-// k_Renderer* k_RendererCreate(GLuint program);
-k_Renderer* k_RendererCreate(GLuint program, float* data, float* colors, size_t size);
+k_Renderer* k_RendererCreate(GLuint program);
 
 void k_RendererDestroy(k_Renderer* r);
 
 void k_RendererDrawTriangles(k_Renderer* r,
+                             const k_Mat4* restrict transform,
                              const k_Mat4* restrict mvp,
                              const float* restrict data,
                              size_t size);
 
-void k_RendererColorTriangles(k_Renderer* r, const float* restrict data, size_t size);
+void k_RendererColorTriangles(k_Renderer* r, const float* restrict data);
 
 #endif  // _K_GRAPHICS_RENDERER_H_

@@ -31,10 +31,10 @@ static GLfloat color[3 * 36];
 // ========================================================
 // ========================================================
 
-GLuint vertexBufferID;
-GLuint colorBufferID;
-GLuint mvpID;
-GLuint rotID;
+// GLuint vertexBufferID;
+// GLuint colorBufferID;
+// GLuint mvpID;
+// GLuint rotID;
 
 // ========================================================
 // ========================================================
@@ -65,8 +65,13 @@ static void init(k_Executable* restrict self) {
     k_Mat4MVP(&g->mvp, &g->model, &g->view, &g->projection);
 
     g->program = loadShaderProgram();
+    g->renderer = k_RendererCreate(g->program);
+    if (!g->renderer) {
+        k_LogErrorf("Not enough memory to create a renderer\n");
+        exit(EXIT_FAILURE);
+    }
 
-    SDL_Surface;
+    /*
     glGenBuffers(1, &vertexBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, 3 * 36 * sizeof(float), data, GL_STATIC_DRAW);
@@ -76,18 +81,13 @@ static void init(k_Executable* restrict self) {
     glBufferData(GL_ARRAY_BUFFER, 3 * 36 * sizeof(float), color, GL_STATIC_DRAW);
 
     mvpID = glGetUniformLocation(g->program, "MVP");
-    rotID = glGetUniformLocation(g->program, "ROT");
-
-    // g->renderer = k_RendererCreate(g->program);
-    // if (!g->renderer) {
-    //     k_LogErrorf("Not enough memory to create a renderer\n");
-    //     exit(EXIT_FAILURE);
-    // }
+    rotID = glGetUniformLocation(g->program, "Transform");
+    */
 }
 
 static void step(k_Executable* restrict self, float dt) {
     Game* g = k_Ptr(self);
-    // k_Renderer* r = g->renderer;
+    k_Renderer* r = g->renderer;
 
     k_Mat4 rot;
 
@@ -97,6 +97,10 @@ static void step(k_Executable* restrict self, float dt) {
     k_Mat4Rotation(&rot, g->rotation);
 
     glUseProgram(g->program);
+    k_RendererDrawTriangles(r, &rot, &g->mvp, data, sizeof(cube));
+    k_RendererColorTriangles(r, color);
+
+    /*
     glUniformMatrix4fv(mvpID, 1, GL_FALSE, (const GLfloat*)&g->mvp.m[0][0]);
     glUniformMatrix4fv(rotID, 1, GL_FALSE, (const GLfloat*)&rot.m[0][0]);
 
@@ -110,7 +114,6 @@ static void step(k_Executable* restrict self, float dt) {
         0,         // stride
         (void*)0   // array buffer offset
     );
-    // glDrawArrays(GL_TRIANGLES, 0, 36);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glDisableVertexAttribArray(0);
 
@@ -124,9 +127,8 @@ static void step(k_Executable* restrict self, float dt) {
         0,         // stride
         (void*)0   // array buffer offset
     );
-
-    // k_RendererDrawTriangles(r, &g->mvp, data, sizeof(data));
-    // k_RendererColorTriangles(r, color, sizeof(color));
+    glDisableVertexAttribArray(1);
+    */
 }
 
 static GLuint loadShaderProgram() {
