@@ -10,7 +10,6 @@ struct k_Renderer {
     GLuint vertexBuffer;
     GLuint colorBuffer;
     GLuint transform;
-    GLuint mvp;
 };
 
 // k_Renderer* k_RendererCreate(GLuint program) {
@@ -29,7 +28,6 @@ k_Renderer* k_RendererCreate(GLuint program) {
     glBufferData(GL_ARRAY_BUFFER, _64Kb, NULL, GL_DYNAMIC_DRAW);
 
     r->transform = glGetUniformLocation(program, "Transform");
-    r->mvp = glGetUniformLocation(program, "MVP");
     return r;
 }
 
@@ -45,18 +43,12 @@ void k_RendererDestroy(k_Renderer* r) {
 
 void k_RendererDrawTriangles(k_Renderer* r,
                              const k_Mat4* restrict transform,
-                             const k_Mat4* restrict mvp,
                              const float* restrict data,
                              size_t size) {
     glUniformMatrix4fv(r->transform,
                        1,
                        GL_FALSE,
                        (const GLfloat*)&transform->m[0][0]);
-
-    glUniformMatrix4fv(r->mvp,
-                       1,
-                       GL_FALSE,
-                       (const GLfloat*)&mvp->m[0][0]);
 
     glNamedBufferSubData(r->vertexBuffer, 0, size, data);
     glEnableVertexAttribArray(0);

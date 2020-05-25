@@ -16,7 +16,6 @@ void k_RendererDestroy(k_Renderer* r);
 
 void k_RendererDrawTriangles(k_Renderer* r,
                              const k_Mat4* restrict transform,
-                             const k_Mat4* restrict mvp,
                              const float* restrict data,
                              size_t size);
 

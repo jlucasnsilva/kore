@@ -12,10 +12,10 @@
 
 #include "math/math.h"
 
-#include "graphics/shape/shape.h"
-#include "graphics/renderer/renderer.h"
-
+#include "graphics/graphics.h"
 #include "memory/memory.h"
 #include "memory/datastructures/datastructures.h"
+
+#include "world/world.h"
 
 #endif  // _K_KORE_H_

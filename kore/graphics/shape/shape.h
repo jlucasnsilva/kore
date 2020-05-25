@@ -21,11 +21,21 @@ typedef struct {
     k_Rectangle bottom;
 } k_Cube;
 
-void k_RectangleMake(k_Rectangle *restrict target,
-                     k_Vec3 topLeft,
-                     k_Vec3 topRight,
-                     k_Vec3 bottomLeft,
-                     k_Vec3 bottomRight) {
+typedef struct {
+    k_Triangle triangles[6];
+} k_Hexagon;
+
+typedef struct {
+    k_Hexagon top;
+    k_Hexagon bottom;
+    k_Rectangle sides[6];
+} k_HexagonBlock;
+
+static inline void k_RectangleMake(k_Rectangle *restrict target,
+                                   k_Vec3 topLeft,
+                                   k_Vec3 topRight,
+                                   k_Vec3 bottomLeft,
+                                   k_Vec3 bottomRight) {
     target->top.vertices[0] = topLeft;
     target->top.vertices[1] = bottomLeft;
     target->top.vertices[2] = topRight;
@@ -35,7 +45,7 @@ void k_RectangleMake(k_Rectangle *restrict target,
     target->bottom.vertices[2] = bottomRight;
 }
 
-void k_CubeMake(k_Cube *restrict target, k_Vec3 center, float length) {
+static inline void k_CubeMake(k_Cube *restrict target, k_Vec3 center, float length) {
     float half = length / 2.0f;
     k_Vec3 less = k_Vec3Add(center, k_bVec3(.x = -half, .y = -half, .z = -half));
     k_Vec3 plus = k_Vec3Add(center, k_bVec3(.x = half, .y = half, .z = half));
@@ -72,10 +82,70 @@ void k_CubeMake(k_Cube *restrict target, k_Vec3 center, float length) {
                     k_bVec3(.y = less.y, .z = less.z, .x = plus.x));
 }
 
+static inline void k_HexagonMake(k_Hexagon *restrict target) {
+    float edge = 1.0f;
+    float halfDiagonal = edge;
+    float halfEdge = edge / 2.0f;
+    float height = (sqrtf(3.0f) / 2) * edge;
+
+    //      0
+    //   1     5
+    //   2     4
+    //      3
+    target->triangles[0].vertices[0] = k_bVec3(.z = -height, .x = halfEdge);
+    target->triangles[0].vertices[1] = k_bVec3(.z = -height, .x = -halfEdge);
+    target->triangles[0].vertices[2] = k_bVec3();
+
+    target->triangles[1].vertices[0] = k_bVec3(.z = -height, .x = -halfEdge);
+    target->triangles[1].vertices[1] = k_bVec3(.x = -halfDiagonal);
+    target->triangles[1].vertices[2] = k_bVec3();
+
+    target->triangles[2].vertices[0] = k_bVec3(.x = -halfDiagonal);
+    target->triangles[2].vertices[1] = k_bVec3(.x = -halfEdge, .z = height);
+    target->triangles[2].vertices[2] = k_bVec3();
+
+    target->triangles[3].vertices[0] = k_bVec3(.z = height, .x = -halfEdge);
+    target->triangles[3].vertices[1] = k_bVec3(.z = height, .x = halfEdge);
+    target->triangles[3].vertices[2] = k_bVec3();
+
+    target->triangles[4].vertices[0] = k_bVec3(.x = halfEdge, .z = height);
+    target->triangles[4].vertices[1] = k_bVec3(.x = halfDiagonal);
+    target->triangles[4].vertices[2] = k_bVec3();
+
+    target->triangles[5].vertices[0] = k_bVec3(.z = -height, .x = halfEdge);
+    target->triangles[5].vertices[1] = k_bVec3(.x = halfDiagonal);
+    target->triangles[5].vertices[2] = k_bVec3();
+}
+
+static inline void k_HexagonBlockMake(k_HexagonBlock *restrict target) {
+    k_Hexagon *top = &target->top;
+    k_Hexagon *bottom = &target->bottom;
+
+    k_HexagonMake(&target->top);
+    k_HexagonMake(&target->bottom);
+    for (int i = 0; i < 6; i++) {
+        top->triangles[i].vertices[0].y = 0.5f;
+        top->triangles[i].vertices[1].y = 0.5f;
+        top->triangles[i].vertices[2].y = 0.5f;
+
+        bottom->triangles[i].vertices[0].y = -0.5f;
+        bottom->triangles[i].vertices[1].y = -0.5f;
+        bottom->triangles[i].vertices[2].y = -0.5f;
+    }
+
+    for (int i = 0; i < 6; i++) {
+        k_RectangleMake(&target->sides[i],
+                        top->triangles[i].vertices[0],
+                        top->triangles[i].vertices[1],
+                        bottom->triangles[i].vertices[0],
+                        bottom->triangles[i].vertices[1]);
+    }
+}
+
 #ifdef DebugBuild
 #include <stdio.h>
 
-void k_CubeColor(float *restrict colors) {
+static inline void k_CubeColor(float *restrict colors) {
     float cs[] = {
         0.8,
         0.2,
@@ -129,7 +199,7 @@ void k_CubeColor(float *restrict colors) {
     }
 }
 
-void k_CubePrint(const k_Cube *restrict c) {
+static inline void k_CubePrint(const k_Cube *restrict c) {
     float *a = (void *)c;
     int b = 0;
     for (int i = 0; i < sizeof(k_Cube) / sizeof(float); i++) {
@@ -143,6 +213,56 @@ void k_CubePrint(const k_Cube *restrict c) {
     }
     putchar('\n');
 }
+
+static inline void k_HexagonBlockColor(float *restrict colors) {
+    float cs[] = {
+        // TOP ///////////////////////////////
+        0.8,
+        0.2,
+        0.2,
+        // SIDES /////////////////////////////
+        0.2,
+        0.8,
+        0.2,
+        // BOTTOM ////////////////////////////
+        0.2,
+        0.2,
+        0.8,
+    };
+
+    int i = 0;
+    int start = 0;
+    size_t hs = sizeof(k_Hexagon) / sizeof(float);
+    size_t hbs = sizeof(k_HexagonBlock) / sizeof(float);
+
+    // TOP
+    for (i = start; i < (start + hs); i += 3) {
+        float sub = i % 2 == 0 ? 0.4f : 0.0f;
+        colors[i + 0] = cs[0] - sub;
+        colors[i + 1] = cs[1] - sub;
+        colors[i + 2] = cs[2] - sub;
+    }
+
+    // BOTTOM
+    start += hs;
+    for (i = start; i < (start + hs); i += 3) {
+        float sub = i % 2 == 0 ? 0.4f : 0.0f;
+        for (int j = 0; j < 3; j++) {
+            colors[i + 0] = cs[3] - sub;
+            colors[i + 1] = cs[4] - sub;
+            colors[i + 2] = cs[5] - sub;
+        }
+    }
+
+    start += hs;
+    for (i = start; i < hbs; i += 3) {
+        float sub = i % 2 == 0 ? 0.4f : 0.0f;
+        colors[i + 0] = cs[6] - sub;
+        colors[i + 1] = cs[7] - sub;
+        colors[i + 2] = cs[8] - sub;
+    }
+}
+
 #endif
 
 #endif  //_K_GRAPHICS_SHAPE_H_

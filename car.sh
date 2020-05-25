@@ -4,4 +4,4 @@
 
 clear
 make
-./game
+./hexproject

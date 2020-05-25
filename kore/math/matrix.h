@@ -13,6 +13,8 @@ typedef union {
     float m[4][4];
 } k_Mat4;
 
+#define k_Mat4RTS(...) k_Mat4Mul3(__VA_ARGS__)
+
 #define k_bMat4() ((k_Mat4){.m = {{0.0f, 0.0f, 0.0f, 0.0f}, \
                                   {0.0f, 0.0f, 0.0f, 0.0f}, \
                                   {0.0f, 0.0f, 0.0f, 0.0f}, \
@@ -45,10 +47,14 @@ typedef union {
                                                  {0.0f, 0.0f, 0.0f, 1.0f}}})
 
 void k_Mat4Add(k_Mat4 *restrict result, const k_Mat4 *restrict a);
-void k_Mat4Mul(k_Mat4 *restrict result, const k_Mat4 *restrict a, const k_Mat4 *restrict b);
-void k_Mat4MVP(k_Mat4 *restrict result, const k_Mat4 *restrict m, const k_Mat4 *restrict v, const k_Mat4 *restrict p);
-void k_Mat4SetVec4(k_Mat4 *restrict result, k_Vec4 a, k_Vec4 b, k_Vec4 c);
-k_Vec4 k_Mat4Vec4(const k_Mat4 *restrict m, k_Vec4 v);
+void k_Mat4Mul(k_Mat4 *restrict result,
+               const k_Mat4 *restrict a,
+               const k_Mat4 *restrict b);
+void k_Mat4Mul3(k_Mat4 *restrict result,
+                const k_Mat4 *restrict m,
+                const k_Mat4 *restrict v,
+                const k_Mat4 *restrict p);
+void k_Mat4MulScalar(k_Mat4 *restrict result, k_Mat4 *restrict m, float s);
 
 void k_Mat4XRotation(k_Mat4 *restrict result, float yaw);
 void k_Mat4YRotation(k_Mat4 *restrict result, float pitch);
@@ -57,12 +63,17 @@ void k_Mat4Rotation(k_Mat4 *restrict result, k_Vec3 rotation);
 
 void k_Mat4Translation(k_Mat4 *restrict result, k_Vec3 delta);
 
-void k_Mat4Scale(k_Mat4 *restrict result, k_Mat4 *restrict m, float s);
 void k_Mat4Scaling(k_Mat4 *restrict result, k_Vec3 delta);
 
-void k_Mat4LookAt(k_Mat4 *restrict result, k_Vec3 cameraPosition, k_Vec3 target, k_Vec3 up);
+void k_Mat4LookAt(k_Mat4 *restrict result,
+                  k_Vec3 cameraPosition,
+                  k_Vec3 target,
+                  k_Vec3 up);
 
-void k_Mat4Perspective(k_Mat4 *restrict result, float angleOfView, float aspectRatio, float near, float far);
+void k_Mat4Perspective(k_Mat4 *restrict result,
+                       float angleOfView,
+                       float aspectRatio,
+                       float near, float far);
 
 #ifdef DebugBuild
 void k_Mat4Print(const k_Mat4 *restrict m);
