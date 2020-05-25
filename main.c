@@ -81,7 +81,8 @@ static void step(k_Executable* restrict self, float dt) {
     k_Mat4 translate;
     k_Mat4 transform;
 
-    g->rotation = k_Vec3Add(g->rotation, k_bVec3(.y = 3.6 * dt));
+    g->rotation = k_Vec3Add(g->rotation, k_bVec3(.x = 30 * dt,
+                                                 .y = 30 * dt));
 
     glUseProgram(g->program);
 
