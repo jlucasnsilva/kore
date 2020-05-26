@@ -72,7 +72,7 @@ void k_ScenarioDraw(k_Renderer* restrict r,
         for (int j = 0; j < SCN_WIDTH; j++) {
             int idx = i * SCN_WIDTH + j;
             float dh = j % 2 == 0 ? 0.5f : 0.0f;
-            k_Vec3 t = k_bVec3(.x = (float)j * 3,
+            k_Vec3 t = k_bVec3(.x = (float)j * 2,
                                .z = (float)i * 3 + dh);
 
             k_Mat4Scaling(&scaling, scn->scaling[idx]);

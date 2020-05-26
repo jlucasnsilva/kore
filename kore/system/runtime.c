@@ -18,7 +18,9 @@
 //
 // ========================================================
 
-static void handleEvents(bool *restrict quit);
+static void handleEvents(k_Executable *restrict self,
+                         float dt,
+                         bool *restrict quit);
 
 static void initCoreLibs(void);
 
@@ -67,10 +69,11 @@ void k_Run(k_Executable *restrict exec) {
         }
 
         lasTime = currentTime;
-        handleEvents(&quit);
+        float dt = timeDiff / 1000.0;
 
+        handleEvents(exec, dt, &quit);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        exec->Step(exec, timeDiff / 1000.0);
+        exec->Step(exec, dt);
 
         SDL_GL_SwapWindow(k_gWindow);
     }
@@ -144,13 +147,22 @@ static void initVAO(void) {
     glBindVertexArray(k_gVertexArray);
 }
 
-static void handleEvents(bool *restrict quit) {
+static void handleEvents(k_Executable *restrict self,
+                         float dt,
+                         bool *restrict quit) {
+    k_InputEventHandlerFunc handler = self->HandleInputEvent;
+    k_InputEvent realEvent;
     SDL_Event e;
 
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
             case SDL_QUIT:
                 *quit = true;
+                break;
+            default:
+                if (k_InputEventTranslate(&realEvent, &e)) {
+                    handler(self, &realEvent, dt);
+                }
                 break;
         }
     }

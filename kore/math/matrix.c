@@ -47,8 +47,8 @@ void k_Mat4XRotation(k_Mat4 *restrict result, float yaw) {
 
     result->m[0][0] = 1.0f;
     result->m[1][1] = cosa;
-    result->m[1][2] = -sina;
-    result->m[2][1] = sina;
+    result->m[1][2] = sina;
+    result->m[2][1] = -sina;
     result->m[2][2] = cosa;
 
     result->m[3][3] = 1.0f;
@@ -62,8 +62,8 @@ void k_Mat4YRotation(k_Mat4 *restrict result, float pitch) {
 
     result->m[1][1] = 1.0f;
     result->m[0][0] = cosa;
-    result->m[0][2] = sina;
-    result->m[2][0] = -sina;
+    result->m[0][2] = -sina;
+    result->m[2][0] = sina;
     result->m[2][2] = cosa;
 
     result->m[3][3] = 1.0f;
@@ -77,8 +77,8 @@ void k_Mat4ZRotation(k_Mat4 *restrict result, float roll) {
 
     result->m[2][2] = 1.0f;
     result->m[0][0] = cosa;
-    result->m[0][1] = -sina;
-    result->m[1][0] = sina;
+    result->m[0][1] = sina;
+    result->m[1][0] = -sina;
     result->m[1][1] = cosa;
 
     result->m[3][3] = 1.0f;

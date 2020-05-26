@@ -8,6 +8,7 @@
 static void init(k_Executable* restrict self);
 static void quit(k_Executable* restrict self);
 static void step(k_Executable* restrict self, float dt);
+static void handler(k_Executable* self, k_InputEvent* restrict event, float dt);
 
 static GLuint loadShaderProgram();
 
@@ -16,10 +17,7 @@ typedef struct {
     GLuint program;
     k_Renderer* renderer;
     k_Scenario* scenario;
-    k_Mat4 projection;
-    k_Mat4 model;
-    k_Mat4 view;
-    k_Mat4 mvp;
+    k_PerpectiveCamera* cam;
 } Game;
 
 static k_HexagonBlock hexagon;
@@ -27,7 +25,10 @@ static GLfloat color[sizeof(k_HexagonBlock) / sizeof(float)];
 
 int main(void) {
     Game game;
-    game.exec = k_bExecutable(.Step = step, .Init = init, .Quit = quit);
+    game.exec = k_bExecutable(.Step = step,
+                              .Init = init,
+                              .Quit = quit,
+                              .HandleInputEvent = handler);
 
     k_Init();
     k_Run(&game.exec);
@@ -43,15 +44,14 @@ static void init(k_Executable* restrict self) {
         exit(EXIT_FAILURE);
     }
 
+    g->cam = k_PerpectiveCameraCreate();
+    if (!g->cam) {
+        k_Logf("unable to acquire memory for the camera");
+        exit(EXIT_FAILURE);
+    }
+
     k_HexagonBlockMake(&hexagon);
     k_HexagonBlockColor(color);
-
-    g->model = k_bMat4I();
-    // k_Mat4LookAt(&g->view, k_bVec3(.z = -15.0f, .y = 15.0f), k_bVec3(), k_bVec3(.y = 1));
-    k_Mat4LookAt(&g->view, k_bVec3(.y = 5.0f, .z = 5.0f), k_bVec3(), k_bVec3(.y = 1));
-    k_Mat4Perspective(&g->projection, 45.0f, 16.0f / 9.0f, 0.1f, 100.0f);
-    k_Mat4Mul3(&g->mvp, &g->model, &g->view, &g->projection);
-
     g->program = loadShaderProgram();
     g->renderer = k_RendererCreate(g->program);
     if (!g->renderer) {
@@ -63,9 +63,14 @@ static void init(k_Executable* restrict self) {
 static void step(k_Executable* restrict self, float dt) {
     Game* g = k_Ptr(self);
     k_Renderer* r = g->renderer;
+    k_PerpectiveCamera* cam = g->cam;
 
+    k_Mat4 model = k_bMat4I();
+    k_Mat4 mvp;
+
+    k_Mat4Mul3(&mvp, &model, &cam->view, &cam->projection);
     glUseProgram(g->program);
-    k_ScenarioDraw(r, g->scenario, &g->mvp);
+    k_ScenarioDraw(r, g->scenario, &mvp);
 }
 
 static GLuint loadShaderProgram() {
@@ -87,4 +92,44 @@ static void quit(k_Executable* restrict self) {
     k_ScenarioDestroy(&g->scenario);
     k_RendererDestroy(g->renderer);
     glDeleteProgram(g->program);
+}
+
+static void handler(k_Executable* self,
+                    k_InputEvent* restrict event,
+                    float dt) {
+    Game* g = k_Ptr(self);
+    float speed = 0.3f;
+    k_Vec3 d;
+
+    switch (event->type) {
+        case k_InputEventTypeKeyPressed:
+            if (event->keyPressed.scancode == SDL_SCANCODE_W) {
+                g->cam->position.z -= speed;
+                g->cam->target.z -= speed;
+                k_PerpectiveCameraUpdate(g->cam);
+            } else if (event->keyPressed.scancode == SDL_SCANCODE_S) {
+                g->cam->position.z += speed;
+                g->cam->target.z += speed;
+                k_PerpectiveCameraUpdate(g->cam);
+            }
+
+            if (event->keyPressed.scancode == SDL_SCANCODE_A) {
+                g->cam->position.x -= speed;
+                g->cam->target.x -= speed;
+                k_PerpectiveCameraUpdate(g->cam);
+            } else if (event->keyPressed.scancode == SDL_SCANCODE_D) {
+                g->cam->position.x += speed;
+                g->cam->target.x += speed;
+                k_PerpectiveCameraUpdate(g->cam);
+            }
+            break;
+        case k_InputEventTypeMouseWheelMotion:
+            d = k_bVec3(.y = -1 * event->mouseWheelMotion.y,
+                        .z = -1 * event->mouseWheelMotion.y);
+            g->cam->position = k_Vec3Add(g->cam->position, d);
+            k_PerpectiveCameraUpdate(g->cam);
+            break;
+        default:
+            break;
+    }
 }

@@ -1,5 +1,5 @@
 #include "renderer.h"
-#include "../../memory/memory.h"
+#include "../memory/memory.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>

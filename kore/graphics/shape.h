@@ -1,7 +1,7 @@
 #ifndef _K_GRAPHICS_SHAPE_H_
 #define _K_GRAPHICS_SHAPE_H_
 
-#include "../../math/math.h"
+#include "../math/math.h"
 
 typedef struct {
     k_Vec3 vertices[3];

@@ -1,7 +1,7 @@
 #ifndef _K_GRAPHICS_RENDERER_H_
 #define _K_GRAPHICS_RENDERER_H_
 
-#include "../../math/math.h"
+#include "../math/math.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>
