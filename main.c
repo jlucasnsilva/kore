@@ -106,28 +106,50 @@ static void handler(k_Executable* self,
             if (event->keyPressed.scancode == SDL_SCANCODE_W) {
                 g->cam->position.z -= speed;
                 g->cam->target.z -= speed;
-                k_PerpectiveCameraUpdate(g->cam);
             } else if (event->keyPressed.scancode == SDL_SCANCODE_S) {
                 g->cam->position.z += speed;
                 g->cam->target.z += speed;
-                k_PerpectiveCameraUpdate(g->cam);
             }
 
             if (event->keyPressed.scancode == SDL_SCANCODE_A) {
                 g->cam->position.x -= speed;
                 g->cam->target.x -= speed;
-                k_PerpectiveCameraUpdate(g->cam);
             } else if (event->keyPressed.scancode == SDL_SCANCODE_D) {
                 g->cam->position.x += speed;
                 g->cam->target.x += speed;
-                k_PerpectiveCameraUpdate(g->cam);
             }
+
+            if (event->keyPressed.scancode == SDL_SCANCODE_UP) {
+                d = k_bVec3(.y = -0.1f);
+                g->cam->position = k_Vec3Add(g->cam->position, d);
+            } else if (event->keyPressed.scancode == SDL_SCANCODE_DOWN) {
+                d = k_bVec3(.y = 0.1f);
+                g->cam->position = k_Vec3Add(g->cam->position, d);
+            }
+
+            printf("camera.position = <%.2f, %.2f, %.2f>\n",
+                   g->cam->position.x,
+                   g->cam->position.y,
+                   g->cam->position.z);
+            printf("  camera.target = <%.2f, %.2f, %.2f>\n",
+                   g->cam->target.x,
+                   g->cam->target.y,
+                   g->cam->target.z);
+            k_PerpectiveCameraUpdate(g->cam);
             break;
         case k_InputEventTypeMouseWheelMotion:
             d = k_bVec3(.y = -1 * event->mouseWheelMotion.y,
                         .z = -1 * event->mouseWheelMotion.y);
             g->cam->position = k_Vec3Add(g->cam->position, d);
             k_PerpectiveCameraUpdate(g->cam);
+            printf("camera.position = <%.2f, %.2f, %.2f>\n",
+                   g->cam->position.x,
+                   g->cam->position.y,
+                   g->cam->position.z);
+            printf("  camera.target = <%.2f, %.2f, %.2f>\n",
+                   g->cam->target.x,
+                   g->cam->target.y,
+                   g->cam->target.z);
             break;
         default:
             break;

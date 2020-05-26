@@ -4,9 +4,10 @@
 #include "../graphics/graphics.h"
 
 #include <stdlib.h>
+#include <math.h>
 
-static const int SCN_HEIGHT = 16;
-static const int SCN_WIDTH = 16;
+static const int SCN_HEIGHT = 10;
+static const int SCN_WIDTH = 12;
 static const int SCN_SIZE = SCN_HEIGHT * SCN_WIDTH;
 static const int COLOR_LEN = sizeof(k_HexagonBlock) / sizeof(float);
 
@@ -23,7 +24,11 @@ struct k_Scenario {
 
 k_Scenario* k_ScenarioCreate() {
     k_HexagonBlockMake(&scenarioTile);
-    for (int i = 0; i < COLOR_LEN; i += 3) {
+    k_HexagonBlockColor(yellowLight);
+    k_HexagonBlockColor(yellow);
+    k_HexagonBlockColor(greenLight);
+    k_HexagonBlockColor(green);
+    for (int i = 0; i < (6 * 3 * 3); i += 3) {
         yellowLight[i + 0] = 34.0f / 255.0f;
         yellowLight[i + 1] = 255.0f / 255.0f;
         yellowLight[i + 2] = 128.0f / 255.0f;
@@ -47,7 +52,7 @@ k_Scenario* k_ScenarioCreate() {
         return NULL;
     }
     for (int i = 0; i < SCN_SIZE; i++) {
-        scn->scaling[i] = k_bVec3(.x = 1.0f, .y = 1.0f, .z = 1.0f);
+        scn->scaling[i] = k_bVec3(.x = 1.0f, .y = 0.5f, .z = 1.0f);
     }
     return scn;
 }
@@ -61,6 +66,8 @@ void k_ScenarioDestroy(k_Scenario** restrict scn) {
 void k_ScenarioDraw(k_Renderer* restrict r,
                     k_Scenario* restrict scn,
                     k_Mat4* restrict mvp) {
+    const float dz = 1.732f;
+    const float dx = 1.50f;
     k_Mat4 translation;
     k_Mat4 transform;
     k_Mat4 scaling;
@@ -71,9 +78,9 @@ void k_ScenarioDraw(k_Renderer* restrict r,
     for (int i = 0; i < SCN_HEIGHT; i++) {
         for (int j = 0; j < SCN_WIDTH; j++) {
             int idx = i * SCN_WIDTH + j;
-            float dh = j % 2 == 0 ? 0.5f : 0.0f;
-            k_Vec3 t = k_bVec3(.x = (float)j * 2,
-                               .z = (float)i * 3 + dh);
+            float dh = j % 2 != 0 ? 0.5f * dz : 0.0f;
+            k_Vec3 t = k_bVec3(.x = (float)j * dx,
+                               .z = (float)i * dz + dh);
 
             k_Mat4Scaling(&scaling, scn->scaling[idx]);
             k_Mat4Translation(&translation, t);
@@ -84,12 +91,12 @@ void k_ScenarioDraw(k_Renderer* restrict r,
                                     &transform,
                                     (void*)&scenarioTile,
                                     sizeof(k_HexagonBlock));
-            k_RendererColorTriangles(r,
-                                     colors,
-                                     sizeof(colors));
             // k_RendererColorTriangles(r,
-            //                          j % 2 == 0 ? yellowLight : greenLight,
-            //                          sizeof(greenLight));
+            //                          colors,
+            //                          sizeof(colors));
+            k_RendererColorTriangles(r,
+                                     j % 2 == 0 ? yellow : yellowLight,
+                                     sizeof(greenLight));
         }
     }
 }
