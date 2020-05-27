@@ -9,25 +9,25 @@
 static const int SCN_HEIGHT = 10;
 static const int SCN_WIDTH = 12;
 static const int SCN_SIZE = SCN_HEIGHT * SCN_WIDTH;
-static const int COLOR_LEN = sizeof(k_HexagonBlock) / sizeof(float);
+static const int COLOR_LEN = sizeof(k_ShapeHexagonBlock) / sizeof(float);
 
 static float yellow[COLOR_LEN];
 static float yellowLight[COLOR_LEN];
 static float green[COLOR_LEN];
 static float greenLight[COLOR_LEN];
 static float colors[COLOR_LEN];
-static k_HexagonBlock scenarioTile;
+static k_ShapeHexagonBlock scenarioTile;
 
 struct k_Scenario {
     k_Vec3 scaling[SCN_SIZE];
 };
 
 k_Scenario* k_ScenarioCreate() {
-    k_HexagonBlockMake(&scenarioTile);
-    k_HexagonBlockColor(yellowLight);
-    k_HexagonBlockColor(yellow);
-    k_HexagonBlockColor(greenLight);
-    k_HexagonBlockColor(green);
+    k_ShapeHexagonBlockMake(&scenarioTile);
+    k_ShapeHexagonBlockColor(yellowLight);
+    k_ShapeHexagonBlockColor(yellow);
+    k_ShapeHexagonBlockColor(greenLight);
+    k_ShapeHexagonBlockColor(green);
     for (int i = 0; i < (6 * 3 * 3); i += 3) {
         yellowLight[i + 0] = 34.0f / 255.0f;
         yellowLight[i + 1] = 255.0f / 255.0f;
@@ -46,7 +46,7 @@ k_Scenario* k_ScenarioCreate() {
         green[i + 2] = 76.0f / 255.0f;
     }
 
-    k_HexagonBlockColor(colors);
+    k_ShapeHexagonBlockColor(colors);
     k_Scenario* scn = k_New(k_Scenario, 1);
     if (!scn) {
         return NULL;
@@ -90,7 +90,7 @@ void k_ScenarioDraw(k_Renderer* restrict r,
             k_RendererDrawTriangles(r,
                                     &transform,
                                     (void*)&scenarioTile,
-                                    sizeof(k_HexagonBlock));
+                                    sizeof(k_ShapeHexagonBlock));
             // k_RendererColorTriangles(r,
             //                          colors,
             //                          sizeof(colors));

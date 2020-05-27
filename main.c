@@ -20,8 +20,8 @@ typedef struct {
     k_PerpectiveCamera* cam;
 } Game;
 
-static k_HexagonBlock hexagon;
-static GLfloat color[sizeof(k_HexagonBlock) / sizeof(float)];
+static k_ShapeHexagonBlock hexagon;
+static GLfloat color[sizeof(k_ShapeHexagonBlock) / sizeof(float)];
 
 int main(void) {
     Game game;
@@ -31,6 +31,11 @@ int main(void) {
                               .HandleInputEvent = handler);
 
     k_Init();
+
+    SDL_RWops* io = SDL_RWFromFile("car.sh", "r");
+    printf("> size = %ld\n", SDL_RWsize(io));
+    SDL_RWclose(io);
+
     k_Run(&game.exec);
     k_Quit();
     return 0;
@@ -50,8 +55,8 @@ static void init(k_Executable* restrict self) {
         exit(EXIT_FAILURE);
     }
 
-    k_HexagonBlockMake(&hexagon);
-    k_HexagonBlockColor(color);
+    k_ShapeHexagonBlockMake(&hexagon);
+    k_ShapeHexagonBlockColor(color);
     g->program = loadShaderProgram();
     g->renderer = k_RendererCreate(g->program);
     if (!g->renderer) {

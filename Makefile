@@ -7,6 +7,7 @@ SRCS=kore/graphics/*.c              \
 	 kore/memory/*.c                \
 	 kore/memory/datastructures/*.c \
 	 kore/system/*.c                \
+	 kore/io/*.c                    \
 	 kore/world/*.c
 
 all:

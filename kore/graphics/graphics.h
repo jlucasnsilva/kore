@@ -4,5 +4,6 @@
 #include "renderer.h"
 #include "camera.h"
 #include "shape.h"
+#include "color.h"
 
 #endif  // _K_GRAPHICS_GRAPHICS_H_

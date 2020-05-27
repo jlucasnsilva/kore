@@ -1,7 +1,8 @@
 #include "loader.h"
-#include "../util/util.h"
+#include "../types/types.h"
 #include "../memory/memory.h"
 #include "../log/log.h"
+#include "../io/io.h"
 
 #include <SDL2/SDL.h>
 
@@ -14,8 +15,6 @@
 // Declaration
 //
 // ========================================================
-
-static char *loadShader(const char *restrict);
 
 static bool compileShader(GLuint, const char *restrict);
 
@@ -34,12 +33,12 @@ k_Maybe(GLuint) k_LoadShaderProgram(k_ShaderProgramLoader *restrict info) {
 
     ret.ok = false;
 
-    vertexShaderCode = loadShader(info->VertexShaderPath);
+    vertexShaderCode = k_IOReadStringFile(info->VertexShaderPath).input;
     if (!vertexShaderCode) {
         goto clean_up;
     }
 
-    fragmentShaderCode = loadShader(info->FragmentShaderPath);
+    fragmentShaderCode = k_IOReadStringFile(info->FragmentShaderPath).input;
     if (!fragmentShaderCode) {
         goto clean_up;
     }
@@ -77,29 +76,6 @@ clean_up:
 // Private implementation
 //
 // ========================================================
-
-static char *loadShader(const char *restrict filepath) {
-    size_t capacity = 2048;
-    char *content = (char *)malloc(capacity);
-    if (!content) {
-        return NULL;
-    }
-    memset(content, '\0', 2048);
-
-    SDL_RWops *in = SDL_RWFromFile(filepath, "r");
-    if (!in) {
-        k_Delete(content);
-        return NULL;
-    }
-
-    SDL_RWread(in, content, capacity, 1);
-    if (strlen(content) < 1) {
-        k_Delete(content);
-        return NULL;
-    }
-    SDL_RWclose(in);
-    return content;
-}
 
 static bool compileShader(GLuint shader, const char *code) {
     GLint res = GL_FALSE;
