@@ -14,9 +14,9 @@ k_PerpectiveCamera* k_PerpectiveCameraCreate() {
     //   camera.target = <6.60, 0.00, 9.00>
     *cam = (k_PerpectiveCamera){
         // .position = k_bVec3(.x = 7.5f, .y = 23.5f, .z = 27.2f),
-        .position = k_bVec3(.y = 5.0f, .z = 5.0f),
+        .position = k_bVec3(.Y = 5.0f, .Z = 5.0f),
         .aspectRatio = 16.0f / 9.0f,
-        .up = k_bVec3(.y = 1.0f),
+        .up = k_bVec3(.Y = 1.0f),
         .angleOfView = 45.0f,
         .target = k_bVec3(),
         .far = 100.0f,

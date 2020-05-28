@@ -10,7 +10,7 @@
     static inline T T##NAME(T a, T b) {                       \
         T res;                                                \
         for (int i = 0; i < sizeof(T) / sizeof(float); i++) { \
-            res.v[i] = a.v[i] OP b.v[i];                      \
+            res.V[i] = a.V[i] OP b.V[i];                      \
         }                                                     \
         return res;                                           \
     }
@@ -19,7 +19,7 @@
     static inline float T##DistSquared(T a, T b) {            \
         float res = 0.0f;                                     \
         for (int i = 0; i < sizeof(T) / sizeof(float); i++) { \
-            float x = a.v[i] - b.v[i];                        \
+            float x = a.V[i] - b.V[i];                        \
             res += x * x;                                     \
         }                                                     \
         return res;                                           \
@@ -34,21 +34,21 @@
     static inline float T##Dot(T a, T b) {                    \
         float res = 0.0f;                                     \
         for (int i = 0; i < sizeof(T) / sizeof(float); i++) { \
-            res += a.v[i] * b.v[i];                           \
+            res += a.V[i] * b.V[i];                           \
         }                                                     \
         return res;                                           \
     }
 
-#define K_DEFINE_VEC_PAIR_EQ(T)                   \
-    static inline bool T##Eq(T a, T b) {          \
-        return T##Dist(a, b) <= k_FloatTolerance; \
+#define K_DEFINE_VEC_PAIR_EQ(T)                    \
+    static inline bool T##Eq(T a, T b) {           \
+        return T##Dist(a, b) <= k_gFloatTolerance; \
     }
 
 #define K_DEFINE_VEC_LEN_SQUARED(T)                           \
     static inline float T##LenSquared(T a) {                  \
         float res = 0.0f;                                     \
         for (int i = 0; i < sizeof(T) / sizeof(float); i++) { \
-            res += a.v[i] * a.v[i];                           \
+            res += a.V[i] * a.V[i];                           \
         }                                                     \
         return res;                                           \
     }
@@ -62,7 +62,7 @@
     static inline T T##Scale(T a, float s) {                  \
         T res = T##Zero;                                      \
         for (int i = 0; i < sizeof(T) / sizeof(float); i++) { \
-            res.v[i] = a.v[i] * s;                            \
+            res.V[i] = a.V[i] * s;                            \
         }                                                     \
         return res;                                           \
     }

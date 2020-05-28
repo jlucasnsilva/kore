@@ -18,8 +18,8 @@ typedef uint32_t k_Rune;
 
 #define K_DEFINE_MAYBE(T) \
     typedef struct {      \
-        T value;          \
-        bool ok;          \
+        T Value;          \
+        bool Ok;          \
     } Maybe__##T
 
 #define k_Short(x) ((short)(x))
@@ -38,9 +38,5 @@ typedef uint32_t k_Rune;
 #define k_Double(x) ((double)(x))
 
 #define k_Ptr(x) ((void *)(x))
-
-K_DEFINE_MAYBE(char);
-
-K_DEFINE_MAYBE(GLuint);
 
 #endif  // _K_TYPES_TYPES_H_

@@ -5,9 +5,9 @@
 #include <stdlib.h>
 
 typedef struct {
-    char* input;
-    int64_t len;
-    int64_t fileSize;
+    char* Input;
+    int64_t Length;
+    int64_t FileSize;
 } k_IOFileContent;
 
 k_IOFileContent k_IOReadFile(const char* restrict path);

@@ -4,16 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static char* koreMemory = NULL;
-static size_t capacity = 0;
-static size_t used = 0;
+static char* gKoreMemory = NULL;
+static size_t gCapacity = 0;
+static size_t gUsed = 0;
 
 void k_InitMemory(size_t megaBytes) {
-    used = 0;
-    capacity = megaBytes * 1024 * 1024;
-    koreMemory = malloc(capacity);
+    gUsed = 0;
+    gCapacity = megaBytes * 1024 * 1024;
+    gKoreMemory = malloc(gCapacity);
 
-    if (!koreMemory) {
+    if (!gKoreMemory) {
         k_LogErrorf("Failed to allocate the system memory.\n");
         exit(EXIT_FAILURE);
     }

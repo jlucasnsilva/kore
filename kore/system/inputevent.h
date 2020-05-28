@@ -23,40 +23,40 @@ typedef enum {
 } k_MouseButton;
 
 typedef struct {
-    uint32_t scancode;
-    int32_t key;
+    uint32_t Scancode;
+    int32_t Key;
 } k_InputEventKeyboard;
 
 typedef struct {
-    int32_t x;
-    int32_t y;
-    int32_t xrel;
-    int32_t yrel;
+    int32_t X;
+    int32_t Y;
+    int32_t Xrel;
+    int32_t Yrel;
 } k_InputEventMouseMovement;
 
 typedef struct {
-    k_MouseButton button;
-    uint8_t clicks;
-    int32_t x;
-    int32_t y;
+    k_MouseButton Button;
+    uint8_t Clicks;
+    int32_t X;
+    int32_t Y;
 } k_InputEventMouseButton;
 
 typedef struct {
-    int32_t x;
-    int32_t y;
-    uint32_t direction;
+    int32_t X;
+    int32_t Y;
+    uint32_t Direction;
 } k_InputEventMouseWheelMotion;
 
 typedef struct {
-    k_InputEventType type;
-    uint32_t timestamp;
+    k_InputEventType Type;
+    uint32_t Timestamp;
     union {
-        k_InputEventKeyboard keyPressed;
-        k_InputEventKeyboard keyReleased;
-        k_InputEventMouseMovement mouseMovement;
-        k_InputEventMouseButton mouseButtonPressed;
-        k_InputEventMouseButton mouseButtonReleased;
-        k_InputEventMouseWheelMotion mouseWheelMotion;
+        k_InputEventKeyboard KeyPressed;
+        k_InputEventKeyboard KeyReleased;
+        k_InputEventMouseMovement MouseMovement;
+        k_InputEventMouseButton MouseButtonPressed;
+        k_InputEventMouseButton MouseButtonReleased;
+        k_InputEventMouseWheelMotion MouseWheelMotion;
     };
 } k_InputEvent;
 

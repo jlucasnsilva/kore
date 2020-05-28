@@ -5,37 +5,37 @@ bool k_InputEventTranslate(k_InputEvent *restrict event,
     switch (source->type) {
         case SDL_KEYDOWN:
         case SDL_KEYUP:
-            event->type = source->type == SDL_KEYDOWN
+            event->Type = source->type == SDL_KEYDOWN
                               ? k_InputEventTypeKeyPressed
                               : k_InputEventTypeKeyReleased;
-            event->timestamp = source->key.timestamp;
-            event->timestamp = source->key.timestamp;
-            event->keyPressed.key = source->key.keysym.sym;
-            event->keyPressed.scancode = source->key.keysym.scancode;
+            event->Timestamp = source->key.timestamp;
+            event->Timestamp = source->key.timestamp;
+            event->KeyPressed.Key = source->key.keysym.sym;
+            event->KeyPressed.Scancode = source->key.keysym.scancode;
             return true;
         case SDL_MOUSEMOTION:
-            event->type = k_InputEventTypeMouseMovement;
-            event->timestamp = source->motion.timestamp;
-            event->mouseMovement.x = source->motion.x;
-            event->mouseMovement.y = source->motion.y;
-            event->mouseMovement.xrel = source->motion.xrel;
-            event->mouseMovement.yrel = source->motion.yrel;
+            event->Type = k_InputEventTypeMouseMovement;
+            event->Timestamp = source->motion.timestamp;
+            event->MouseMovement.X = source->motion.x;
+            event->MouseMovement.Y = source->motion.y;
+            event->MouseMovement.Xrel = source->motion.xrel;
+            event->MouseMovement.Yrel = source->motion.yrel;
             return true;
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
-            event->type = source->type == SDL_MOUSEBUTTONDOWN
+            event->Type = source->type == SDL_MOUSEBUTTONDOWN
                               ? k_InputEventTypeMouseButtonPressed
                               : k_InputEventTypeMouseButtonReleased;
-            event->mouseButtonPressed.button = source->button.button;
-            event->mouseButtonPressed.clicks = source->button.clicks;
-            event->mouseButtonPressed.x = source->button.x;
-            event->mouseButtonPressed.y = source->button.y;
+            event->MouseButtonPressed.Button = source->button.button;
+            event->MouseButtonPressed.Clicks = source->button.clicks;
+            event->MouseButtonPressed.X = source->button.x;
+            event->MouseButtonPressed.Y = source->button.y;
             return true;
         case SDL_MOUSEWHEEL:
-            event->type = k_InputEventTypeMouseWheelMotion;
-            event->mouseWheelMotion.direction = source->wheel.direction;
-            event->mouseWheelMotion.x = source->wheel.x;
-            event->mouseWheelMotion.y = source->wheel.y;
+            event->Type = k_InputEventTypeMouseWheelMotion;
+            event->MouseWheelMotion.Direction = source->wheel.direction;
+            event->MouseWheelMotion.X = source->wheel.x;
+            event->MouseWheelMotion.Y = source->wheel.y;
             return true;
     }
     return false;

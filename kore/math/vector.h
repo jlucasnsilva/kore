@@ -5,31 +5,31 @@
 
 typedef union {
     struct {
-        float x;
-        float y;
-        float z;
+        float X;
+        float Y;
+        float Z;
     };
-    float v[3];
+    float V[3];
 } k_Vec3;
 
 typedef union {
     struct {
-        float x;
-        float y;
-        float z;
-        float w;
+        float X;
+        float Y;
+        float Z;
+        float W;
     };
-    float v[4];
+    float V[4];
 } k_Vec4;
 
-#define k_Vec3Spread(v) (v).x, (v).y, (v).z,
-#define k_bVec3(...) ((k_Vec3){{.x = 0.0f, .y = 0.0f, .z = 0.0f, __VA_ARGS__}})
+#define k_Vec3Spread(v) (v).X, (v).Y, (v).Z,
+#define k_bVec3(...) ((k_Vec3){{.X = 0.0f, .Y = 0.0f, .Z = 0.0f, __VA_ARGS__}})
 
-#define k_Vec4Spread(v) (v).x, (v).y, (v).z, (v).w
-#define k_bVec4(...) ((k_Vec4){{.x = 0.0f, \
-                                .y = 0.0f, \
-                                .z = 0.0f, \
-                                .w = 0.0f, \
+#define k_Vec4Spread(v) (v).X, (v).Y, (v).Z, (v).w
+#define k_bVec4(...) ((k_Vec4){{.X = 0.0f, \
+                                .Y = 0.0f, \
+                                .Z = 0.0f, \
+                                .W = 0.0f, \
                                 __VA_ARGS__}})
 
 extern const k_Vec3 k_Vec3Zero;
@@ -74,17 +74,17 @@ K_DEFINE_VEC_NORMALIZE(k_Vec4)
 // ========================================================
 
 static inline k_Vec3 k_Vec3Cross(k_Vec3 a, k_Vec3 b) {
-    return k_bVec3(.x = (a.y * b.z) - (a.z * b.y),
-                   .y = (a.z * b.x) - (a.x * b.z),
-                   .z = (a.x * b.y) - (a.y * b.x));
+    return k_bVec3(.X = (a.Y * b.Z) - (a.Z * b.Y),
+                   .Y = (a.Z * b.X) - (a.X * b.Z),
+                   .Z = (a.X * b.Y) - (a.Y * b.X));
 }
 
 static inline k_Vec3 k_Vec3FromVec4(k_Vec4 v) {
-    return k_bVec3(.x = v.x, .y = v.y, .z = v.z);
+    return k_bVec3(.X = v.X, .Y = v.Y, .Z = v.Z);
 }
 
 static inline k_Vec4 k_Vec4FromVec3(k_Vec4 v) {
-    return k_bVec4(.x = v.x, .y = v.y, .z = v.z, .w = 1.0f);
+    return k_bVec4(.X = v.X, .Y = v.Y, .Z = v.Z, .W = 1.0f);
 }
 
 #endif  // _K_MATH_VECTOR_H_

@@ -8,7 +8,8 @@ SRCS=kore/graphics/*.c              \
 	 kore/memory/datastructures/*.c \
 	 kore/system/*.c                \
 	 kore/io/*.c                    \
-	 kore/world/*.c
+	 kore/loader/*.c                \
+	 hexapod/world/*.c
 
 all:
 	$(CC) $(LDFLAGS) $(LDLIBS) -o $(PNAME) main.c $(SRCS)

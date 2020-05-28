@@ -1,5 +1,5 @@
 #include "consts.h"
 
-const float PI = 3.14f;
+const float k_gPI = 3.14f;
 
-const float k_FloatTolerance = 0.01f;
+const float k_gFloatTolerance = 0.01f;

@@ -1,14 +1,9 @@
 #include "scenario.h"
-#include "../math/math.h"
-#include "../memory/memory.h"
-#include "../graphics/graphics.h"
+#include "../../kore/kore.h"
 
 #include <stdlib.h>
 #include <math.h>
 
-static const int SCN_HEIGHT = 10;
-static const int SCN_WIDTH = 12;
-static const int SCN_SIZE = SCN_HEIGHT * SCN_WIDTH;
 static const int COLOR_LEN = sizeof(k_ShapeHexagonBlock) / sizeof(float);
 
 static float yellow[COLOR_LEN];
@@ -18,11 +13,7 @@ static float greenLight[COLOR_LEN];
 static float colors[COLOR_LEN];
 static k_ShapeHexagonBlock scenarioTile;
 
-struct k_Scenario {
-    k_Vec3 scaling[SCN_SIZE];
-};
-
-k_Scenario* k_ScenarioCreate() {
+hx_Scenario* hx_ScenarioCreate() {
     k_ShapeHexagonBlockMake(&scenarioTile);
     k_ShapeHexagonBlockColor(yellowLight);
     k_ShapeHexagonBlockColor(yellow);
@@ -47,25 +38,27 @@ k_Scenario* k_ScenarioCreate() {
     }
 
     k_ShapeHexagonBlockColor(colors);
-    k_Scenario* scn = k_New(k_Scenario, 1);
+    hx_Scenario* scn = k_New(hx_Scenario, 1);
     if (!scn) {
         return NULL;
     }
-    for (int i = 0; i < SCN_SIZE; i++) {
-        scn->scaling[i] = k_bVec3(.x = 1.0f, .y = 0.5f, .z = 1.0f);
+    for (int i = 0; i < k_bScenarioSize; i++) {
+        scn->scaling[i] = k_bVec3(.X = 1.0f, .Y = 0.5f, .Z = 1.0f);
     }
     return scn;
 }
 
-void k_ScenarioDestroy(k_Scenario** restrict scn) {
+void hx_ScenarioDestroy(hx_Scenario** restrict scn) {
     if (scn && *scn) {
         k_Delete(*scn);
     }
 }
 
-void k_ScenarioDraw(k_Renderer* restrict r,
-                    k_Scenario* restrict scn,
-                    k_Mat4* restrict mvp) {
+void hx_ScenarioDraw(k_Renderer* restrict r,
+                     hx_Scenario* restrict scn,
+                     k_Mat4* restrict mvp,
+                     float* uv,
+                     size_t uvSize) {
     const float dz = 1.732f;
     const float dx = 1.50f;
     k_Mat4 translation;
@@ -75,12 +68,12 @@ void k_ScenarioDraw(k_Renderer* restrict r,
     // float dx = 16.0f;
     // float dz = 8.0f;
 
-    for (int i = 0; i < SCN_HEIGHT; i++) {
-        for (int j = 0; j < SCN_WIDTH; j++) {
-            int idx = i * SCN_WIDTH + j;
+    for (int i = 0; i < k_bScenarioHeight; i++) {
+        for (int j = 0; j < k_bScenarioWidth; j++) {
+            int idx = i * k_bScenarioWidth + j;
             float dh = j % 2 != 0 ? 0.5f * dz : 0.0f;
-            k_Vec3 t = k_bVec3(.x = (float)j * dx,
-                               .z = (float)i * dz + dh);
+            k_Vec3 t = k_bVec3(.X = (float)j * dx,
+                               .Z = (float)i * dz + dh);
 
             k_Mat4Scaling(&scaling, scn->scaling[idx]);
             k_Mat4Translation(&translation, t);
@@ -91,12 +84,15 @@ void k_ScenarioDraw(k_Renderer* restrict r,
                                     &transform,
                                     (void*)&scenarioTile,
                                     sizeof(k_ShapeHexagonBlock));
+            k_RendererMapUV(r, uv, uvSize);
+
             // k_RendererColorTriangles(r,
             //                          colors,
             //                          sizeof(colors));
-            k_RendererColorTriangles(r,
-                                     j % 2 == 0 ? yellow : yellowLight,
-                                     sizeof(greenLight));
+
+            // k_RendererColorTriangles(r,
+            //                          j % 2 == 0 ? yellow : yellowLight,
+            //                          sizeof(greenLight));
         }
     }
 }
