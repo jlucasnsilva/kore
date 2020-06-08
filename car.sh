@@ -4,4 +4,4 @@
 
 clear
 make
-./hexproject
+./project
