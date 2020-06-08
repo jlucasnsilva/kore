@@ -98,7 +98,7 @@ void k_RendererMapUV(k_Renderer* restrict r,
         0,         // stride
         (void*)0   // array buffer offset
     );
-    glDisableVertexAttribArray(1);
+    // glDisableVertexAttribArray(1);
 }
 
 void k_RendererSetShaderProgram(k_Renderer* restrict r,

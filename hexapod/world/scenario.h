@@ -6,8 +6,10 @@
 
 #include <stdlib.h>
 
-#define k_bScenarioHeight 10
-#define k_bScenarioWidth 12
+// #define k_bScenarioHeight 10
+// #define k_bScenarioWidth 12
+#define k_bScenarioHeight 1
+#define k_bScenarioWidth 1
 #define k_bScenarioSize (k_bScenarioHeight * k_bScenarioWidth)
 
 typedef struct {

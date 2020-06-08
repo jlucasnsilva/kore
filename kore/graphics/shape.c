@@ -94,7 +94,9 @@ void k_ShapeHexagonUV(float *restrict uv, size_t count) {
 
     k_ShapeHexagonMake(&hexagon);
 
-    const size_t hexSize = sizeof(hexagon) / sizeof(float);
+    const size_t hexagonSize = sizeof(hexagon) / sizeof(float);
+    const size_t vertexCount = hexagonSize / 3;
+    const size_t uvCount = 2 * vertexCount;
     const float *hexArray = k_Ptr(&hexagon);
     const float minZ = hexagon.Triangles[0].Vertices[0].Z;
     const float maxZ = hexagon.Triangles[3].Vertices[0].Z;
@@ -111,15 +113,19 @@ void k_ShapeHexagonUV(float *restrict uv, size_t count) {
     //   2 \     / 4
     //      -----
     //        3
-    printf("size = %lu, w = %f, h = %f\n", hexSize, w, h);
+    printf("size = %lu, w = %f, h = %f\n", uvCount, w, h);
     printf("[\n");
     int i = 0;
     int j = 0;
-    for (i = 0, j = 0; j < hexSize && i < count; i += 2, j += 3) {
+    for (i = 0, j = 0;
+         i < uvCount && i < count && j < hexagonSize;
+         i += 2, j += 3) {
         uv[i + 0] = (hexArray[j + 0] + w / 2) / w;      // +0 = x component
         uv[i + 1] = 1 - (hexArray[j + 2] + h / 2) / h;  // +2 = z component
-        printf("  [%2d] (%f, %f, %f) -> (%f, %f)\n",
+        printf("  %2d | [%2d:%-2d] (%f, %f, %f) -> (%f, %f)\n",
+               (i + 1) / 2,
                i,
+               i + 1,
                hexArray[j + 0],
                hexArray[j + 1],
                hexArray[j + 2],

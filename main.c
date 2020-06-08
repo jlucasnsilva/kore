@@ -68,7 +68,7 @@ static void init(k_Executable* restrict self) {
     }
 
     size_t uvBytes = sizeof(k_ShapeHexagon);
-    size_t uvSize = uvBytes / sizeof(float);
+    size_t uvSize = 2 * uvBytes / 3;
     g->uv = malloc(uvBytes);
     if (!g->uv) {
         k_LogErrorf("Failed to load the UV mappings\n");
