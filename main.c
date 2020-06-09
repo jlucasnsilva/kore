@@ -1,5 +1,4 @@
-#include "kore/kore.h"
-#include "hexapod/hexapod.h"
+#include <Kore/Kore.h>
 
 #include <string.h>
 #include <stdlib.h>
@@ -14,16 +13,14 @@ static void handler(k_Executable* self, k_InputEvent* restrict event, float dt);
 static void loadShaderProgram(k_Renderer* restrict renderer);
 
 typedef struct {
-    k_Texture tex;
     k_Executable exec;
+    // ---------------------
     k_Renderer* renderer;
-    hx_Scenario* scenario;
     k_PerpectiveCamera* cam;
-    float* uv;
 } Game;
 
-static k_ShapeHexagonBlock hexagon;
-static GLfloat color[sizeof(k_ShapeHexagonBlock) / sizeof(float)];
+static k_ShapeCube cube;
+static float color[sizeof(k_ShapeCube) / sizeof(float)];
 
 int main(void) {
     Game game;
@@ -40,20 +37,15 @@ int main(void) {
 
 static void init(k_Executable* restrict self) {
     Game* g = k_Ptr(self);
-    g->scenario = hx_ScenarioCreate();
-    if (!g->scenario) {
-        k_Logf("unable to acquire memory for the scenario");
-        exit(EXIT_FAILURE);
-    }
 
     g->cam = k_PerpectiveCameraCreate();
     if (!g->cam) {
         k_Logf("unable to acquire memory for the camera");
         exit(EXIT_FAILURE);
     }
+    g->cam->position = k_bVec3(.X = 5.0f, .Y = 5.0f, .Z = 5.0f);
+    k_PerpectiveCameraUpdate(g->cam);
 
-    k_ShapeHexagonBlockMake(&hexagon);
-    k_ShapeHexagonBlockColor(color);
     g->renderer = k_RendererCreate();
     loadShaderProgram(g->renderer);
     if (!g->renderer) {
@@ -61,21 +53,8 @@ static void init(k_Executable* restrict self) {
         exit(EXIT_FAILURE);
     }
 
-    g->tex = k_LoadTexture("game/assets/hexagon.png");
-    if (g->tex.Width < 0 || g->tex.Height < 0) {
-        k_LogErrorf("Failed to load the texture\n");
-        exit(EXIT_FAILURE);
-    }
-
-    size_t uvBytes = sizeof(k_ShapeHexagon);
-    size_t uvSize = 2 * uvBytes / 3;
-    g->uv = malloc(uvBytes);
-    if (!g->uv) {
-        k_LogErrorf("Failed to load the UV mappings\n");
-        exit(EXIT_FAILURE);
-    }
-
-    k_ShapeHexagonUV(g->uv, uvSize);
+    k_ShapeCubeMake(&cube);
+    k_ShapeCubeColor(color);
 }
 
 static void step(k_Executable* restrict self, float dt) {
@@ -87,14 +66,18 @@ static void step(k_Executable* restrict self, float dt) {
     k_Mat4 mvp;
 
     k_Mat4Mul3(&mvp, &model, &cam->view, &cam->projection);
-    hx_ScenarioDraw(r, g->scenario, &mvp, g->uv, sizeof(k_ShapeHexagonUV));
+    k_RendererDrawTriangles(r, &mvp, (void*)&cube, sizeof(k_ShapeCube));
+    k_RendererColorTriangles(r, color, sizeof(k_ShapeCube));
 }
 
 static void loadShaderProgram(k_Renderer* restrict renderer) {
+    char* vfp = "Kore/Shader/Color/vertex.glsl";
+    char* ffp = "Kore/Shader/Color/fragment.glsl";
+
     bool ok = k_LoadShaders(renderer,
-                            k_bShaderLoader(.Filepath = "vertex.glsl",
+                            k_bShaderLoader(.Filepath = vfp,
                                             .Type = k_ShaderTypeVertex),
-                            k_bShaderLoader(.Filepath = "fragment.glsl",
+                            k_bShaderLoader(.Filepath = ffp,
                                             .Type = k_ShaderTypeFragment));
     if (!ok) {
         exit(EXIT_FAILURE);
@@ -103,7 +86,7 @@ static void loadShaderProgram(k_Renderer* restrict renderer) {
 
 static void quit(k_Executable* restrict self) {
     Game* g = k_Ptr(self);
-    hx_ScenarioDestroy(&g->scenario);
+    k_PerpectiveCameraDestroy(&g->cam);
     k_RendererDestroy(g->renderer);
 }
 
@@ -140,14 +123,6 @@ static void handler(k_Executable* self,
                 g->cam->position = k_Vec3Add(g->cam->position, d);
             }
 
-            printf("camera.position = <%.2f, %.2f, %.2f>\n",
-                   g->cam->position.X,
-                   g->cam->position.Y,
-                   g->cam->position.Z);
-            printf("  camera.target = <%.2f, %.2f, %.2f>\n",
-                   g->cam->target.X,
-                   g->cam->target.Y,
-                   g->cam->target.Z);
             k_PerpectiveCameraUpdate(g->cam);
             break;
         case k_InputEventTypeMouseWheelMotion:
@@ -155,14 +130,6 @@ static void handler(k_Executable* self,
                         .Z = -1 * event->MouseWheelMotion.Y);
             g->cam->position = k_Vec3Add(g->cam->position, d);
             k_PerpectiveCameraUpdate(g->cam);
-            printf("camera.position = <%.2f, %.2f, %.2f>\n",
-                   g->cam->position.X,
-                   g->cam->position.Y,
-                   g->cam->position.Z);
-            printf("  camera.target = <%.2f, %.2f, %.2f>\n",
-                   g->cam->target.X,
-                   g->cam->target.Y,
-                   g->cam->target.Z);
             break;
         default:
             break;

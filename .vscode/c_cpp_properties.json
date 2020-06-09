@@ -2,7 +2,7 @@
   "configurations": [
     {
       "name": "Linux",
-      "includePath": ["${workspaceFolder}/**"],
+      "includePath": ["${workspaceFolder}/Kore/Include"],
       "defines": ["LinuxBuild", "DebugBuild"],
       "compilerPath": "/usr/bin/clang-9",
       "cStandard": "c99",
