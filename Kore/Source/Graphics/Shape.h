@@ -39,7 +39,13 @@ void k_ShapeRectangleMake(k_ShapeRectangle *restrict target,
                           k_Vec3 bottomLeft,
                           k_Vec3 bottomRight);
 
+// TODO make it safe
+void k_ShapeRectangleUV(float *restrict uv);
+
 void k_ShapeCubeMake(k_ShapeCube *restrict target);
+
+// TODO make it safe
+void k_ShapeCubeUV(float *restrict uv);
 
 void k_ShapeHexagonMake(k_ShapeHexagon *restrict target);
 void k_ShapeHexagonUV(float *restrict uv, size_t count);

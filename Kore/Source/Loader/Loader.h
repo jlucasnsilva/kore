@@ -4,5 +4,6 @@
 #include "Shader.h"
 #include "Image.h"
 #include "Texture.h"
+#include "Mesh.h"
 
 #endif  // _K_LOADER_LOADER_H_

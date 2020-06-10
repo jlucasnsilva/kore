@@ -15,6 +15,28 @@ void k_ShapeRectangleMake(k_ShapeRectangle *restrict target,
     target->Bottom.Vertices[2] = bottomRight;
 }
 
+void k_ShapeRectangleUV(float *restrict uv) {
+    // 0---2      /3
+    // |  /     /  |
+    // 1/      4---5
+
+    // first triangle
+    uv[0] = 0.0f;  // vertex 0
+    uv[1] = 1.0f;
+    uv[2] = 0.0f;  // vertex 1
+    uv[3] = 0.0f;
+    uv[4] = 1.0f;  // vertex 2
+    uv[5] = 1.0f;
+
+    // second triangle
+    uv[6] = 1.0f;  // vertex 3
+    uv[7] = 1.0f;
+    uv[8] = 0.0f;  // vertex 4
+    uv[9] = 0.0f;
+    uv[10] = 1.0f;  // vertex 5
+    uv[11] = 0.0f;
+}
+
 void k_ShapeCubeMake(k_ShapeCube *restrict target) {
     float half = 0.5f;
     k_Vec3 less = k_bVec3(.X = -half, .Y = -half, .Z = -half);
@@ -50,6 +72,15 @@ void k_ShapeCubeMake(k_ShapeCube *restrict target) {
                          k_bVec3(.Y = less.Y, .Z = plus.Z, .X = plus.X),
                          k_bVec3(.Y = less.Y, .Z = less.Z, .X = less.X),
                          k_bVec3(.Y = less.Y, .Z = less.Z, .X = plus.X));
+}
+
+void k_ShapeCubeUV(float *restrict uv) {
+    k_ShapeRectangleUV(&uv[0]);   // Top
+    k_ShapeRectangleUV(&uv[12]);  // Left
+    k_ShapeRectangleUV(&uv[24]);  // Back
+    k_ShapeRectangleUV(&uv[36]);  // Right
+    k_ShapeRectangleUV(&uv[48]);  // Front
+    k_ShapeRectangleUV(&uv[60]);  // Bottom
 }
 
 void k_ShapeHexagonMake(k_ShapeHexagon *restrict target) {
@@ -111,8 +142,6 @@ void k_ShapeHexagonUV(float *restrict uv, size_t count) {
     //   2 \     / 4
     //      -----
     //        3
-    printf("size = %lu, w = %f, h = %f\n", uvCount, w, h);
-    printf("[\n");
     int i = 0;
     int j = 0;
     for (i = 0, j = 0;
@@ -130,7 +159,6 @@ void k_ShapeHexagonUV(float *restrict uv, size_t count) {
                uv[i + 0],
                uv[i + 1]);
     }
-    printf("]\n");
 }
 
 void k_ShapeHexagonBlockMake(k_ShapeHexagonBlock *restrict target) {

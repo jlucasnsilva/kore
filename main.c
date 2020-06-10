@@ -17,10 +17,15 @@ typedef struct {
     // ---------------------
     k_Renderer* renderer;
     k_PerpectiveCamera* cam;
+    k_Texture tex;
 } Game;
+
+static const size_t UV_SIZE = 2 * 3 * 2 * 6;
 
 static k_ShapeCube cube;
 static float color[sizeof(k_ShapeCube) / sizeof(float)];
+static float uv[UV_SIZE];
+static k_MeshSpreadedOBJ* monkey;
 
 int main(void) {
     Game game;
@@ -53,8 +58,13 @@ static void init(k_Executable* restrict self) {
         exit(EXIT_FAILURE);
     }
 
+    g->tex = k_LoadTexture("texture.png");
+
+    monkey = k_LoadMeshSpreadedOBJ("monkey.spreaded.obj");
+
     k_ShapeCubeMake(&cube);
     k_ShapeCubeColor(color);
+    k_ShapeCubeUV(uv);
 }
 
 static void step(k_Executable* restrict self, float dt) {
@@ -66,13 +76,19 @@ static void step(k_Executable* restrict self, float dt) {
     k_Mat4 mvp;
 
     k_Mat4Mul3(&mvp, &model, &cam->view, &cam->projection);
-    k_RendererDrawTriangles(r, &mvp, (void*)&cube, sizeof(k_ShapeCube));
-    k_RendererColorTriangles(r, color, sizeof(k_ShapeCube));
+    k_RendererDrawTriangles(r,
+                            &mvp,
+                            (void*)monkey->Vertices,
+                            monkey->Count * sizeof(float));
+
+    // k_RendererDrawTriangles(r, &mvp, (void*)&cube, sizeof(k_ShapeCube));
+    // k_RendererMapUV(r, uv, UV_SIZE);
+    // k_RendererColorTriangles(r, color, sizeof(k_ShapeCube));
 }
 
 static void loadShaderProgram(k_Renderer* restrict renderer) {
-    char* vfp = "Kore/Shader/Color/vertex.glsl";
-    char* ffp = "Kore/Shader/Color/fragment.glsl";
+    char* vfp = "Kore/Shader/GLSL/SingleColor/vertex.glsl";
+    char* ffp = "Kore/Shader/GLSL/SingleColor/fragment.glsl";
 
     bool ok = k_LoadShaders(renderer,
                             k_bShaderLoader(.Filepath = vfp,
@@ -86,6 +102,8 @@ static void loadShaderProgram(k_Renderer* restrict renderer) {
 
 static void quit(k_Executable* restrict self) {
     Game* g = k_Ptr(self);
+    k_MeshSpreadedOBJDestroy(&monkey);
+    k_TextureDestroy(&g->tex);
     k_PerpectiveCameraDestroy(&g->cam);
     k_RendererDestroy(g->renderer);
 }
@@ -126,8 +144,9 @@ static void handler(k_Executable* self,
             k_PerpectiveCameraUpdate(g->cam);
             break;
         case k_InputEventTypeMouseWheelMotion:
-            d = k_bVec3(.Y = -1 * event->MouseWheelMotion.Y,
-                        .Z = -1 * event->MouseWheelMotion.Y);
+            d = k_bVec3(.X = -1 * event->MouseWheelMotion.Y,
+                        .Y = -1 * event->MouseWheelMotion.Y,
+                        .Z = -1 * event->MouseWheelMotion.Y, );
             g->cam->position = k_Vec3Add(g->cam->position, d);
             k_PerpectiveCameraUpdate(g->cam);
             break;

@@ -58,7 +58,7 @@ void k_IOReadFileInto(const char* restrict path,
     return;
 }
 
-k_IOFileContent k_IOReadStringFile(const char* restrict path) {
+k_IOFileContent k_IOReadTextFile(const char* restrict path) {
     k_IOFileContent ret = {.Input = NULL, .Length = -1, .FileSize = -1};
     SDL_RWops* in = SDL_RWFromFile(path, "r");
     if (!in) {
@@ -84,9 +84,9 @@ k_IOFileContent k_IOReadStringFile(const char* restrict path) {
     return ret;
 }
 
-void k_IOReadStringFileInto(const char* restrict path,
-                            k_IOFileContent* restrict into,
-                            size_t capacity) {
+void k_IOReadTextFileInto(const char* restrict path,
+                          k_IOFileContent* restrict into,
+                          size_t capacity) {
     *into = (k_IOFileContent){.Input = NULL, .Length = -1, .FileSize = -1};
 
     SDL_RWops* in = SDL_RWFromFile(path, "rb");

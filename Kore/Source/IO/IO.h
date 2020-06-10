@@ -15,9 +15,9 @@ void k_IOReadFileInto(const char* restrict path,
                       k_IOFileContent* restrict into,
                       size_t capacity);
 
-k_IOFileContent k_IOReadStringFile(const char* restrict path);
-void k_IOReadStringFileInto(const char* restrict path,
-                            k_IOFileContent* restrict into,
-                            size_t capacity);
+k_IOFileContent k_IOReadTextFile(const char* restrict path);
+void k_IOReadTextFileInto(const char* restrict path,
+                          k_IOFileContent* restrict into,
+                          size_t capacity);
 
 #endif  // _K_IO_IO_H_

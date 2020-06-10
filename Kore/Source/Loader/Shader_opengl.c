@@ -81,7 +81,7 @@ static size_t getShaderCount(const k_ShaderLoader *restrict loaders) {
 static bool loadShader(GLuint *restrict result,
                        const char *restrict path,
                        k_ShaderType type) {
-    char *code = k_IOReadStringFile(path).Input;
+    char *code = k_IOReadTextFile(path).Input;
     if (!code) {
         k_Logf("unable to load %s shader: %s\n", k_ShaderNameType(type), path);
         return false;

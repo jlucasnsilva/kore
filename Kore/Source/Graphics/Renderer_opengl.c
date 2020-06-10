@@ -8,6 +8,7 @@
 #include <GL/gl.h>
 
 static const size_t g64Kb = 64 * 1024;
+static const size_t g256Kb = 4 * g64Kb;
 
 k_Renderer* k_RendererCreate() {
     k_Renderer* r = malloc(sizeof(k_Renderer));
@@ -17,15 +18,15 @@ k_Renderer* k_RendererCreate() {
 
     glGenBuffers(1, &r->vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, r->vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, g64Kb, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, g256Kb, NULL, GL_DYNAMIC_DRAW);
 
     glGenBuffers(1, &r->colorBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, r->colorBuffer);
-    glBufferData(GL_ARRAY_BUFFER, g64Kb, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, g256Kb, NULL, GL_DYNAMIC_DRAW);
 
     glGenBuffers(1, &r->uvBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, r->uvBuffer);
-    glBufferData(GL_ARRAY_BUFFER, g64Kb, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, g256Kb, NULL, GL_DYNAMIC_DRAW);
     return r;
 }
 
